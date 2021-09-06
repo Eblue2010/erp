@@ -12,7 +12,7 @@ public class OperationsArea extends CoreEntity {
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "area_seq")
-    @SequenceGenerator(name = "area_seq", sequenceName = "area_seq", allocationSize = 1, initialValue = 10)
+    @SequenceGenerator(name = "area_seq", sequenceName = "area_seq", allocationSize = 1, initialValue = 50)
     private Long id;
 
     @Column(name = "LOCATION", length = 50, unique = true)

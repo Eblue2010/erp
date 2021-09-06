@@ -15,7 +15,7 @@ public class ErpDetachment extends CoreEntity {
     @SequenceGenerator(name = "detachment_seq", sequenceName = "detachment_seq", allocationSize = 1, initialValue = 10)
     private Long id;
 
-    @Column(name = "NAME", length = 50, unique = true)
+    @Column(name = "NAME", length = 50)
     @NotNull
     @Size(min = 1, max = 50)
     private String name;

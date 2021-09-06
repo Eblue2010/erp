@@ -51,7 +51,7 @@
                             <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger"/>
                         </p:commandButton>
                         <p:spacer width="5"/>
-                        <p:commandButton value="Back" onclick="window.history.back();" type="button" icon="fa fa-reply"/>
+                        <p:commandButton value="Back" action="#{erpDetachmentForm.backBtnPressed}" icon="fa fa-reply"/>
                     </div>
                     <p:separator/>
 
@@ -73,7 +73,7 @@
                             <label for="inputLocation" class="col-sm-2 control-label">Location</label>
 
                             <div class="col-sm-10">
-                                <p:selectOneMenu id="inputLocation" value="#{erpDetachmentForm.selectedLocation}" style="width:150px">
+                                <p:selectOneMenu id="inputLocation" value="#{erpDetachmentForm.locationValue}" style="width:150px">
                                     <f:selectItems value="#{erpDetachmentForm.locations}"/>
                                 </p:selectOneMenu>
                             </div>

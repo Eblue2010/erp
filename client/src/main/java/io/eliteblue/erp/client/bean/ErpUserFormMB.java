@@ -47,8 +47,8 @@ public class ErpUserFormMB implements Serializable {
             user = new ErpUser();
         }
         enabledValues = new HashMap<>();
-        enabledValues.put("True", true);
-        enabledValues.put("False", false);
+        enabledValues.put("YES", true);
+        enabledValues.put("NO", false);
 
         List<OperationsArea> areas = operationsAreaService.getAll();
         locations = new ArrayList<>();
@@ -151,9 +151,9 @@ public class ErpUserFormMB implements Serializable {
             if(selectedRoles != null && selectedRoles.size() > 0) {
                 user.setAuthorities(new HashSet<>());
                 for(String r: selectedRoles) {
-                    Authority au = new Authority();
-                    au = erpUserService.findAuthorityByName(AuthorityName.valueOf("ROLE_"+r));
+                    Authority au = erpUserService.findAuthorityByName(AuthorityName.valueOf("ROLE_"+r));
                     if(au == null) {
+                        au = new Authority();
                         au.setName(AuthorityName.valueOf("ROLE_"+r));
                     }
                     user.getAuthorities().add(au);

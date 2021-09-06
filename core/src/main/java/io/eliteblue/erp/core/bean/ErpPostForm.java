@@ -79,6 +79,8 @@ public class ErpPostForm implements Serializable {
         this.detachment = detachment;
     }
 
+    public String backBtnPressed() { return "detachment-form?id="+detachmentId+"faces-redirect=true&includeViewParams=true"; }
+
     public void clear() {
         erpPost = new ErpPost();
         id = null;

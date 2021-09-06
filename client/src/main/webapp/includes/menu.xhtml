@@ -48,100 +48,108 @@
 				</ul>
 			</li>
 		</sec:authorize>
-		<sec:authorize access="hasAnyRole('SYS_ADMIN', 'USER')">
-			<li class="header">ERP General</li>
-			<li class="treeview">
-				<a href="#">
-					<i class="fa fa-dashboard nav-icon"/>
-					<span>Dashboard</span>
-					<span class="pull-right-container">
-					  <small class="label pull-right bg-red">10</small>
-					</span>
-				</a>
-				<ul class="treeview-menu">
-					<li>
-						<a href="#">
-							<i class="fa fa-handshake-o nav-icon"/>
-							<span>Requests</span>
-							<span class="pull-right-container">
-							  <small class="label pull-right bg-red">10</small>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a href="#">
-							<i class="fa fa-calendar-o nav-icon"/>
-							<span>Calendar</span>
-						</a>
-					</li>
-				</ul>
-			</li>
-			<li class="treeview">
-				<a href="#">
-					<i class="fa fa-slideshare nav-icon"/>
-					<span>Client Relations</span>
-					<i class="fa fa-angle-left pull-right"/>
-				</a>
-				<ul class="treeview-menu">
-					<li>
-						<p:link outcome="/user/clients">
-							<i class="fa fa-users nav-icon"/>
-							<span>Clients</span>
-						</p:link>
-					</li>
-					<li>
-						<p:link outcome="/user/detachments">
-							<i class="fa fa-shield nav-icon"/>
-							<span>Detachments</span>
-						</p:link>
-					</li>
-					<li>
-						<p:link outcome="/user/posts">
-							<i class="fa fa-map-pin nav-icon"/>
-							<span>Posts</span>
-						</p:link>
-					</li>
-				</ul>
-			</li>
-			<li class="treeview">
-				<a href="#">
-					<i class="fa fa-user-circle-o nav-icon"/>
-					<span>Human Resource</span>
-					<i class="fa fa-angle-left pull-right"/>
-				</a>
-				<ul class="treeview-menu">
-					<li>
-						<a href="#">
-							<i class="fa fa-users nav-icon"/>
-							<span>Employee Management</span>
-						</a>
-					</li>
-					<li>
-						<a href="#">
-							<i class="fa fa-credit-card nav-icon"/>
-							<span>Loans / Deductions</span>
-						</a>
-					</li>
-					<li>
-						<a href="#">
-							<i class="fa fa-calendar nav-icon"/>
-							<span>Holidays</span>
-						</a>
-					</li>
-				</ul>
-			</li>
-			<li>
-				<a href="#">
-					<i class="fa fa-clock-o nav-icon"/>
-					<span>Time Tracking</span>
-				</a>
-			</li>
-			<li>
-				<a href="#">
-					<i class="fa fa-money nav-icon"/>
-					<span>Payroll</span>
-				</a>
-			</li>
+		<li class="header">ERP General</li>
+		<sec:authorize access="hasAnyRole('SYS_ADMIN', 'USER', 'HR', 'CRM', 'TIMETRACKING', 'BILLING', 'PAYROLL')">
+		<li class="treeview">
+			<a href="#">
+				<i class="fa fa-dashboard nav-icon"/>
+				<span>Dashboard</span>
+				<span class="pull-right-container">
+				  <small class="label pull-right bg-red">10</small>
+				</span>
+			</a>
+			<ul class="treeview-menu">
+				<li>
+					<a href="#">
+						<i class="fa fa-handshake-o nav-icon"/>
+						<span>Requests</span>
+						<span class="pull-right-container">
+						  <small class="label pull-right bg-red">10</small>
+						</span>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<i class="fa fa-calendar-o nav-icon"/>
+						<span>Calendar</span>
+					</a>
+				</li>
+			</ul>
+		</li>
+		</sec:authorize>
+		<sec:authorize access="hasAnyRole('SYS_ADMIN', 'CRM')">
+		<li class="treeview">
+			<a href="#">
+				<i class="fa fa-slideshare nav-icon"/>
+				<span>Client Relations</span>
+				<i class="fa fa-angle-left pull-right"/>
+			</a>
+			<ul class="treeview-menu">
+				<li>
+					<p:link outcome="/user/clients">
+						<i class="fa fa-users nav-icon"/>
+						<span>Clients</span>
+					</p:link>
+				</li>
+				<li>
+					<p:link outcome="/user/detachments">
+						<i class="fa fa-shield nav-icon"/>
+						<span>Detachments</span>
+					</p:link>
+				</li>
+				<li>
+					<p:link outcome="/user/posts">
+						<i class="fa fa-map-pin nav-icon"/>
+						<span>Posts</span>
+					</p:link>
+				</li>
+			</ul>
+		</li>
+		</sec:authorize>
+		<sec:authorize access="hasAnyRole('SYS_ADMIN', 'HR')">
+		<li class="treeview">
+			<a href="#">
+				<i class="fa fa-user-circle-o nav-icon"/>
+				<span>Human Resource</span>
+				<i class="fa fa-angle-left pull-right"/>
+			</a>
+			<ul class="treeview-menu">
+				<li>
+					<a href="#">
+						<i class="fa fa-users nav-icon"/>
+						<span>Employee Management</span>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<i class="fa fa-credit-card nav-icon"/>
+						<span>Loans / Deductions</span>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<i class="fa fa-calendar nav-icon"/>
+						<span>Holidays</span>
+					</a>
+				</li>
+			</ul>
+		</li>
+		</sec:authorize>
+		<sec:authorize access="hasAnyRole('SYS_ADMIN', 'TIMETRACKING')">
+		<li>
+			<a href="#">
+				<i class="fa fa-clock-o nav-icon"/>
+				<span>Time Tracking</span>
+			</a>
+		</li>
+		</sec:authorize>
+		<sec:authorize access="hasAnyRole('SYS_ADMIN', 'PAYROLL')">
+		<li>
+			<a href="#">
+				<i class="fa fa-money nav-icon"/>
+				<span>Payroll</span>
+			</a>
+		</li>
 		</sec:authorize>
 	</ul>
 

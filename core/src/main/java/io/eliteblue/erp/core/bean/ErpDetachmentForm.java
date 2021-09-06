@@ -1,5 +1,6 @@
 package io.eliteblue.erp.core.bean;
 
+import io.eliteblue.erp.core.converters.OperationsAreaConverter;
 import io.eliteblue.erp.core.model.ErpClient;
 import io.eliteblue.erp.core.model.ErpDetachment;
 import io.eliteblue.erp.core.model.ErpPost;
@@ -12,8 +13,10 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -41,8 +44,8 @@ public class ErpDetachmentForm implements Serializable {
     private Long clientId;
     private ErpDetachment erpDetachment;
     private ErpClient client;
-    private Map<String, String> locations;
-    private String selectedLocation;
+    private List<SelectItem> locations;
+    private String locationValue;
 
     private List<ErpPost> posts;
     private ErpPost selectedPost;
@@ -54,6 +57,7 @@ public class ErpDetachmentForm implements Serializable {
         if(has(id)) {
             erpDetachment = erpDetachmentService.findById(Long.valueOf(id));
             if(erpDetachment != null) {
+                locationValue = erpDetachment.getLocation().getLocation();
                 client = erpDetachment.getErpClient();
                 clientId = client.getId();
                 posts = new ArrayList<ErpPost>(erpDetachment.getPosts());
@@ -66,9 +70,10 @@ public class ErpDetachmentForm implements Serializable {
             }
         }
         List<OperationsArea> areas = operationsAreaService.getAll();
-        locations = new HashMap<String, String>();
+        locations = new ArrayList<SelectItem>();
         for(OperationsArea o: areas) {
-            locations.put(o.getLocation(), o.getLocation());
+            SelectItem itm = new SelectItem(o.getLocation(), o.getLocation());
+            locations.add(itm);
         }
     }
 
@@ -104,20 +109,12 @@ public class ErpDetachmentForm implements Serializable {
         this.clientId = clientId;
     }
 
-    public Map<String, String> getLocations() {
+    public List<SelectItem> getLocations() {
         return locations;
     }
 
-    public void setLocations(Map<String, String> locations) {
+    public void setLocations(List<SelectItem> locations) {
         this.locations = locations;
-    }
-
-    public String getSelectedLocation() {
-        return selectedLocation;
-    }
-
-    public void setSelectedLocation(String selectedLocation) {
-        this.selectedLocation = selectedLocation;
     }
 
     public List<ErpPost> getPosts() {
@@ -136,9 +133,19 @@ public class ErpDetachmentForm implements Serializable {
         this.selectedPost = selectedPost;
     }
 
+    public String getLocationValue() {
+        return locationValue;
+    }
+
+    public void setLocationValue(String locationValue) {
+        this.locationValue = locationValue;
+    }
+
     public String newPostPressed() {
         return "post-form?detachmentId="+id+"faces-redirect=true&includeViewParams=true";
     }
+
+    public String backBtnPressed() { return "client-form?id="+clientId+"faces-redirect=true&includeViewParams=true"; }
 
     public void clear() {
         erpDetachment = new ErpDetachment();
@@ -168,8 +175,8 @@ public class ErpDetachmentForm implements Serializable {
 
     public void save() throws Exception {
         if(erpDetachment != null) {
-            if(selectedLocation != null) {
-                erpDetachment.setLocation(operationsAreaService.findByLocation(selectedLocation));
+            if(locationValue != null) {
+                erpDetachment.setLocation(operationsAreaService.findByLocation(locationValue));
             }
             erpDetachmentService.save(erpDetachment);
             addDetailMessage("DETACHMENT SAVED", erpDetachment.getName(), FacesMessage.SEVERITY_INFO);
