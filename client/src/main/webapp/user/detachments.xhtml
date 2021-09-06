@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="metadata">
+        <ui:param name="title" value="Detachment list"/> <!-- Automatic create breadCrumb and page title when param 'title' is provided. -->
+        <style type="text/css">
+            .ui-datatable .ui-datatable-header {
+                text-align: right !important;
+            }
+
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        <h2 class="align-left">
+            Detachment Management
+        </h2>
+    </ui:define>
+
+    <ui:define name="description">
+        You can add, edit and delete Detachments.
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form id="form">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <!--<div id="main-buttons" class="hidden-sm hidden-xs">
+                        <p:commandButton action="detachment-form?faces-redirect=true" icon="fa fa-plus"
+                                         value="New Detachment" styleClass="btn-primary"/>
+                        <p:spacer width="5"/>
+                    </div>-->
+
+                    <p:dataTable var="detachment" value="#{erpDetachmentListMB.detachments}" selectionMode="single"
+                                 selection="#{erpDetachmentListMB.selectedDetachment}" rowKey="#{detachment.id}">
+
+                        <p:ajax event="rowSelect" listener="#{erpDetachmentListMB.onRowSelect}"/>
+                        <p:ajax event="rowUnselect" listener="#{erpDetachmentListMB.onRowUnselect}"/>
+
+                        <p:column headerText="Detachment Name">
+                            <h:outputText value="#{detachment.name}" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

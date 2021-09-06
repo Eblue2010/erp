@@ -1,0 +1,17 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 924192376157-f0vo6b9jp38jn2ti2g1fp6l731ss86ue.apps.googleusercontent.com
+            clientSecret: G6-Hpu-nEvYIZX_ofgjAJBcj
+            scope:
+              - email
+              - profile
+          facebook:
+            clientId: 1439655316419918
+            clientSecret: a502045051d15a2a36c0909a938f22d1
+            scope:
+              - email
+              - public_profile

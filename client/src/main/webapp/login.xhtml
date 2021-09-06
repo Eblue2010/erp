@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>ERP Login</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <link rel="shortcut icon" type="image/x-icon"
+          href="#{resource['favicon/favicon.ico']}"/>
+    <link rel="shortcut icon" type="image/x-icon"
+          href="#{resource['favicon/favicon-16x16.png']}" sizes="16x16"/>
+    <link rel="shortcut icon" type="image/x-icon"
+          href="#{resource['favicon/favicon-32x32.png']}" sizes="32x32"/>
+    <link rel="shortcut icon" type="image/x-icon"
+          href="#{resource['favicon/favicon-96x96.png']}" sizes="96x96"/>
+    <link rel="shortcut icon" type="image/x-icon"
+          href="#{resource['favicon/favicon-144x144.png']}" sizes="144x144"/>
+    <meta name="theme-color" content="#444"/>
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <style type="text/css">
+        /* below css hides growls in small screens and makes messages visible */
+        @media ( max-width: 768px) {
+            body div.ui-growl {
+                display: none;
+            }
+
+            body div.ui-messages {
+                display: block;
+            }
+        }
+
+        /* below css hides messages in medium/big devices and makes growl visible in such devices */
+        @media ( min-width: 769px) {
+            body div.ui-growl {
+                display: block;
+            }
+
+            body div.ui-messages {
+                display: none;
+            }
+        }
+
+        body {
+            overflow-y: hidden;
+        }
+
+        body.login-page {
+            background-color: transparent;
+        }
+
+        html {
+            /*background-image: -webkit-linear-gradient(bottom, #6B77A1 0%, #737EA5 3%, #9599B3 15%,
+            #B1B0BF 28%, #C7C1C8 41%, #D6CDCF 57%, #DFD5D3 74%, #E2D7D4 100%);*/
+            background: -webkit-linear-gradient(90deg, hsla(240, 51%, 67%, 1) 0%, hsla(176, 68%, 74%, 1) 100%);
+            filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#7F7FD5", endColorstr="#91EAE4", GradientType=1 );
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+
+        .login-form {
+            width: 385px;
+            margin: 30px auto;
+        }
+        .login-form form {
+            margin-bottom: 15px;
+            background: #f7f7f7;
+            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+        }
+        .login-form h2 {
+            margin: 0 0 15px;
+        }
+        .form-control, .login-btn {
+            min-height: 38px;
+            border-radius: 2px;
+        }
+        .input-group-addon .fa {
+            font-size: 18px;
+        }
+        .login-btn {
+            font-size: 15px;
+            font-weight: bold;
+        }
+        .social-btn .btn {
+            border: none;
+            margin: 10px 3px 0;
+            opacity: 1;
+        }
+        .social-btn .btn:hover {
+            opacity: 0.9;
+        }
+        .social-btn .btn-primary {
+            background: #507cc0;
+        }
+        .social-btn .btn-info {
+            background: #64ccf1;
+        }
+        .social-btn .btn-danger {
+            background: #df4930;
+        }
+        .or-seperator {
+            margin-top: 20px;
+            text-align: center;
+            border-top: 1px solid #ccc;
+        }
+        .or-seperator i {
+            padding: 0 10px;
+            background: #f7f7f7;
+            position: relative;
+            top: -11px;
+            z-index: 1;
+        }
+        .login-logo .container a {
+            font-size: 45px;
+        }
+        .login-logo .container, .col-sm-1, .col-sm-2 {
+            padding-left: 0px;
+        }
+    </style>
+</h:head>
+<h:body styleClass="hold-transition login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-1">
+                        <h:graphicImage library="images" name="elite-erp.png" width="80"/>
+                    </div>
+                    <div class="col-sm-2"><p:link href="index.xhtml">Eliteblue<b>&#160;ERP</b></p:link></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="login-form">
+                    <h:form prependId="false">
+                        <h2 class="text-center">Login</h2>
+                <h:panelGroup rendered="#{param.authfailed eq 'true'}">
+                    <div class="alert alert-danger">
+                        Invalid username and password.
+                    </div>
+                </h:panelGroup>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        <p:inputText autocomplete="off" id="username" class="form-control" name="username" placeholder="Username" required="required"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                        <p:password id="password" class="form-control" name="password" placeholder="Password" required="required" feedback="true"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <p:commandButton id="submit" class="btn btn-primary login-btn btn-block" value="Sign in" ajax="false"/>
+                </div>
+                <div class="clearfix">
+                    <label class="pull-left checkbox-inline"><input type="checkbox"/> Remember me</label>
+                    <a href="#" class="pull-right">Forgot Password?</a>
+                </div>
+                <div class="or-seperator"><i>or</i></div>
+                <p class="text-center">Login with your social media account</p>
+                <div class="text-center social-btn">
+                    <a href="/oauth2/authorization/facebook" class="btn btn-primary"><i class="fa fa-facebook"></i>&#160; Facebook</a>
+                    <!--<a href="#" class="btn btn-info"><i class="fa fa-twitter"></i>&#160; Twitter</a>-->
+                    <a href="/oauth2/authorization/google" class="btn btn-danger"><i class="fa fa-google"></i>&#160; Google</a>
+                </div>
+            </h:form>
+        </div>
+    </div>
+</h:body>
+</html>

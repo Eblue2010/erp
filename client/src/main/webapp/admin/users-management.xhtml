@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="metadata">
+        <ui:param name="title" value="Users list"/> <!-- Automatic create breadCrumb and page title when param 'title' is provided. -->
+        <style type="text/css">
+            .ui-datatable .ui-datatable-header {
+                text-align: right !important;
+            }
+
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        <h2 class="align-left">
+            Users Management
+        </h2>
+    </ui:define>
+
+    <ui:define name="description">
+        You can edit, delete, assign roles and area for users.
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form id="form">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <div id="main-buttons" class="hidden-sm hidden-xs">
+                        <p:commandButton action="user-form?faces-redirect=true" icon="fa fa-plus"
+                                         value="New User" styleClass="btn-primary"/>
+                        <p:spacer width="5"/>
+                    </div>
+
+                    <p:separator/>
+
+                    <p:dataTable var="user" value="#{erpUserListMB.users}" selectionMode="single"
+                        selection="#{erpUserListMB.selectedUser}" rowKey="#{user.id}">
+
+                        <p:ajax event="rowSelect" listener="#{erpUserListMB.onRowSelect}"/>
+                        <p:ajax event="rowUnselect" listener="#{erpUserListMB.onRowUnselect}"/>
+
+                        <p:column headerText="Username">
+                            <h:outputText value="#{user.username}" />
+                        </p:column>
+
+                        <p:column headerText="First Name">
+                            <h:outputText value="#{user.firstname}" />
+                        </p:column>
+
+                        <p:column headerText="Last Name">
+                            <h:outputText value="#{user.lastname}" />
+                        </p:column>
+
+                        <p:column headerText="Email">
+                            <h:outputText value="#{user.email}" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

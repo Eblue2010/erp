@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="title">
+        <p:outputPanel rendered="#{erpDetachmentForm.isNew()}">
+            <h1>New Detachment</h1>
+        </p:outputPanel>
+        <p:outputPanel rendered="#{not erpDetachmentForm.isNew()}">
+            <h1>Edit Detachment</h1>
+        </p:outputPanel>
+    </ui:define>
+
+    <ui:define name="description">
+        <p:outputPanel rendered="#{erpDetachmentForm.isNew()}">
+            Create a new Detachment.
+        </p:outputPanel>
+        <p:outputPanel rendered="#{not erpDetachmentForm.isNew()}">
+            Update Detachment information.
+        </p:outputPanel>
+    </ui:define>
+
+    <ui:define name="body">
+        <f:metadata>
+            <f:viewParam name="clientId" value="#{erpDetachmentForm.clientId}" converter="javax.faces.Long"/>
+            <f:viewParam name="id" value="#{erpDetachmentForm.id}" converter="javax.faces.Long"/>
+            <f:event type="preRenderView" listener="#{erpDetachmentForm.init}"/>
+        </f:metadata>
+
+        <h:form id="form" prependId="false">
+            <h:messages/>
+
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <div id="main-buttons" class="hidden-sm hidden-xs">
+                        <p:commandButton value="Save" action="#{erpDetachmentForm.save}" update="@form"
+                                         icon="fa fa-check" styleClass="btn-primary"/>
+                        <p:spacer width="5" rendered="#{erpDetachmentForm.isNew()}"/>
+                        <p:commandButton value="Clear" action="#{erpDetachmentForm.clear}" process="@this"
+                                         icon="fa fa-refresh" styleClass="btn-success"
+                                         update="@form" rendered="#{erpDetachmentForm.isNew()}" resetValues="true"/>
+                        <p:spacer width="5" rendered="#{not erpDetachmentForm.isNew()}"/>
+
+                        <p:commandButton value="Delete" action="#{erpDetachmentForm.remove}" process="@this"
+                                         rendered="#{not erpDetachmentForm.isNew()}" icon="fa fa-trash"
+                                         styleClass="btn-danger">
+                            <f:setPropertyActionListener value="true"
+                                                         target="#{facesContext.externalContext.flash.keepMessages}"/>
+                            <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger"/>
+                        </p:commandButton>
+                        <p:spacer width="5"/>
+                        <p:commandButton value="Back" onclick="window.history.back();" type="button" icon="fa fa-reply"/>
+                    </div>
+                    <p:separator/>
+
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Client Name</label>
+                            <label class="col-sm-10">#{erpDetachmentForm.client.name}</label>
+                        </div>
+                        <p:spacer width="5"/>
+                        <div class="form-group">
+                            <label for="inputName" class="col-sm-2 control-label">Detachment Name</label>
+
+                            <div class="col-sm-10">
+                                <p:inputText autocomplete="off" value="#{erpDetachmentForm.erpDetachment.name}" class="form-control" id="inputName" placeholder="Name"/>
+                            </div>
+                        </div>
+                        <p:spacer width="5"/>
+                        <div class="form-group">
+                            <label for="inputLocation" class="col-sm-2 control-label">Location</label>
+
+                            <div class="col-sm-10">
+                                <p:selectOneMenu id="inputLocation" value="#{erpDetachmentForm.selectedLocation}" style="width:150px">
+                                    <f:selectItems value="#{erpDetachmentForm.locations}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p:outputPanel rendered="#{not erpDetachmentForm.isNew()}">
+                        <h3>Posts</h3>
+                        <p:separator/>
+                            <div id="secondary-buttons" class="hidden-sm hidden-xs">
+                                <p:commandButton action="#{erpDetachmentForm.newPostPressed}" icon="fa fa-plus"
+                                                 value="New Post" styleClass="btn-primary"/>
+                                <p:spacer width="5"/>
+                            </div>
+
+                            <p:dataTable var="post" value="#{erpDetachmentForm.posts}" selectionMode="single"
+                                         selection="#{erpDetachmentForm.selectedPost}" rowKey="#{post.id}">
+
+                                <p:ajax event="rowSelect" listener="#{erpDetachmentForm.onRowSelect}"/>
+                                <p:ajax event="rowUnselect" listener="#{erpDetachmentForm.onRowUnselect}"/>
+
+                                <p:column headerText="Post Name">
+                                    <h:outputText value="#{post.name}" />
+                                </p:column>
+                            </p:dataTable>
+                    </p:outputPanel>
+                </div>
+            </div>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-danger box-solid">
+                <p:commandButton value="Yes" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes"
+                                 icon="fa fa-check"/>
+                <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no"
+                                 icon="fa fa-close"/>
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

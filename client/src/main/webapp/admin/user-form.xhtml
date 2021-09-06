@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="title">
+        <p:outputPanel rendered="#{erpUserFormMB.isNew()}">
+            <h1>New User</h1>
+        </p:outputPanel>
+        <p:outputPanel rendered="#{not erpUserFormMB.isNew()}">
+            <h1>Edit User</h1>
+        </p:outputPanel>
+    </ui:define>
+
+    <ui:define name="metadata">
+        <style type="text/css">
+            #inputRoles .ui-selectcheckboxmenu-multiple-container {
+                padding: 5px 22px 0 6px;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="description">
+        <p:outputPanel rendered="#{erpUserFormMB.isNew()}">
+            Create a new user.
+        </p:outputPanel>
+        <p:outputPanel rendered="#{not erpUserFormMB.isNew()}">
+            Update user information.
+        </p:outputPanel>
+    </ui:define>
+
+    <ui:define name="body">
+        <f:metadata>
+            <f:viewParam name="id" value="#{erpUserFormMB.id}" converter="javax.faces.Long"/>
+            <f:event type="preRenderView" listener="#{erpUserFormMB.init}"/>
+        </f:metadata>
+
+        <h:form id="form" prependId="false">
+            <h:messages/>
+
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <div id="main-buttons" class="hidden-sm hidden-xs">
+                        <p:commandButton value="Save" action="#{erpUserFormMB.save}" update="@form"
+                                         icon="fa fa-check" styleClass="btn-primary"/>
+                        <p:spacer width="5" rendered="#{erpUserFormMB.isNew()}"/>
+                        <p:commandButton value="Clear" action="#{erpUserFormMB.clear}" process="@this"
+                                         icon="fa fa-refresh" styleClass="btn-success"
+                                         update="@form" rendered="#{erpUserFormMB.isNew()}" resetValues="true"/>
+                        <p:spacer width="5" rendered="#{not erpUserFormMB.isNew()}"/>
+
+                        <p:commandButton value="Delete" action="#{erpUserFormMB.remove}" process="@this"
+                                         rendered="#{not erpUserFormMB.isNew()}" icon="fa fa-trash"
+                                         styleClass="btn-danger">
+                            <f:setPropertyActionListener value="true"
+                                                         target="#{facesContext.externalContext.flash.keepMessages}"/>
+                            <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger"/>
+                        </p:commandButton>
+                        <p:spacer width="5"/>
+                        <p:commandButton value="Back" immediate="true"
+                                         action="users-management?faces-redirect=true"
+                                         process="@this"
+                                         icon="fa fa-reply"/>
+                    </div>
+                    <p:separator/>
+
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="inputUserName" class="col-sm-2 control-label">Username</label>
+
+                            <div class="col-sm-10">
+                                <p:inputText autocomplete="off" value="#{erpUserFormMB.user.username}" class="form-control" id="inputUserName" placeholder="Username"/>
+                            </div>
+                        </div>
+                        <p:outputPanel rendered="#{erpUserFormMB.isNew()}">
+                            <p:spacer width="5"/>
+                            <div class="form-group">
+                                <label for="inputPassword3" class="col-sm-2 control-label" style="font-weight: bold;">Password</label>
+
+                                <div class="col-sm-10">
+                                    <p:password value="#{erpUserFormMB.user.password}" class="form-control" id="inputPassword3" placeholder="Password"/>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                        <p:spacer width="5"/>
+                        <div class="form-group">
+                            <label for="inputFirstName" class="col-sm-2 control-label">First Name</label>
+
+                            <div class="col-sm-10">
+                                <p:inputText autocomplete="off" value="#{erpUserFormMB.user.firstname}" class="form-control" id="inputFirstName" placeholder="First Name"/>
+                            </div>
+                        </div>
+                        <p:spacer width="5"/>
+                        <div class="form-group">
+                            <label for="inputLastName" class="col-sm-2 control-label">Last Name</label>
+
+                            <div class="col-sm-10">
+                                <p:inputText autocomplete="off" value="#{erpUserFormMB.user.lastname}" class="form-control" id="inputLastName" placeholder="Last Name"/>
+                            </div>
+                        </div>
+                        <p:spacer width="5"/>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+
+                            <div class="col-sm-10">
+                                <p:inputText autocomplete="off" value="#{erpUserFormMB.user.email}" type="email" class="form-control" id="inputEmail3" placeholder="Email"/>
+                            </div>
+                        </div>
+                        <p:spacer width="5"/>
+                        <div class="form-group">
+                            <label for="inputEnabled" class="col-sm-2 control-label">Enabled</label>
+
+                            <div class="col-sm-10">
+                                <p:selectOneMenu id="inputEnabled" value="#{erpUserFormMB.user.enabled}" style="width:150px">
+                                    <f:selectItems value="#{erpUserFormMB.enabledValues}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <p:spacer width="5"/>
+                        <div class="form-group">
+                            <label for="inputLocations" class="col-sm-2 control-label">Assigned Location(s)</label>
+
+                            <div class="col-sm-10">
+                                <p:selectCheckboxMenu id="inputLocations" value="#{erpUserFormMB.selectedLocations}" label="Access" style="min-width: 15rem"
+                                                      multiple="true" filter="true" filterMatchMode="startsWith" panelStyle="width: 30rem" scrollHeight="250">
+                                    <f:selectItems value="#{erpUserFormMB.locations}"/>
+                                </p:selectCheckboxMenu>
+                            </div>
+                        </div>
+                        <p:spacer width="5"/>
+                        <div class="form-group">
+                            <label for="inputRoles" class="col-sm-2 control-label">Access Modules</label>
+
+                            <div class="col-sm-10">
+                                <p:selectCheckboxMenu id="inputRoles" value="#{erpUserFormMB.selectedRoles}" label="Access" style="min-width: 15rem"
+                                                      multiple="true" filter="true" filterMatchMode="startsWith" panelStyle="width: 30rem" scrollHeight="250">
+                                    <f:selectItems value="#{erpUserFormMB.userRoles}"/>
+                                </p:selectCheckboxMenu>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-danger box-solid">
+                <p:commandButton value="Yes" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes"
+                                 icon="fa fa-check"/>
+                <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no"
+                                 icon="fa fa-close"/>
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

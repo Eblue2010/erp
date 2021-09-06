@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:sec="http://www.springframework.org/security/tags">
+
+	<ul class="sidebar-menu tree" data-widget="tree">
+		<li>
+			<p:link outcome="/index" onclick="clearBreadCrumbs()">
+				<i class="fa fa-home"></i>
+				<span>Home</span>
+			</p:link>
+		</li>
+		<sec:authorize access="hasRole('SYS_ADMIN')">
+			<li class="header">ERP Administrator</li>
+			<li>
+				<p:link outcome="/admin/users-management">
+					<i class="fa fa-user nav-icon"/>
+					<span>Manage Users</span>
+				</p:link>
+			</li>
+			<li class="treeview">
+				<a href="#">
+					<i class="fa fa-cogs nav-icon"/>
+					<span>Configuration</span>
+					<i class="fa fa-angle-left pull-right"/>
+				</a>
+				<ul class="treeview-menu">
+					<li>
+						<p:link outcome="/admin/areas">
+							<i class="fa fa-map-o nav-icon"/>
+							<span>Locations</span>
+						</p:link>
+					</li>
+					<li>
+						<a href="#">
+							<i class="fa fa-sliders nav-icon"/>
+							<span>System Settings</span>
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							<i class="fa fa-cog nav-icon"/>
+							<span>Payroll Settings</span>
+						</a>
+					</li>
+				</ul>
+			</li>
+		</sec:authorize>
+		<sec:authorize access="hasAnyRole('SYS_ADMIN', 'USER')">
+			<li class="header">ERP General</li>
+			<li class="treeview">
+				<a href="#">
+					<i class="fa fa-dashboard nav-icon"/>
+					<span>Dashboard</span>
+					<span class="pull-right-container">
+					  <small class="label pull-right bg-red">10</small>
+					</span>
+				</a>
+				<ul class="treeview-menu">
+					<li>
+						<a href="#">
+							<i class="fa fa-handshake-o nav-icon"/>
+							<span>Requests</span>
+							<span class="pull-right-container">
+							  <small class="label pull-right bg-red">10</small>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							<i class="fa fa-calendar-o nav-icon"/>
+							<span>Calendar</span>
+						</a>
+					</li>
+				</ul>
+			</li>
+			<li class="treeview">
+				<a href="#">
+					<i class="fa fa-slideshare nav-icon"/>
+					<span>Client Relations</span>
+					<i class="fa fa-angle-left pull-right"/>
+				</a>
+				<ul class="treeview-menu">
+					<li>
+						<p:link outcome="/user/clients">
+							<i class="fa fa-users nav-icon"/>
+							<span>Clients</span>
+						</p:link>
+					</li>
+					<li>
+						<p:link outcome="/user/detachments">
+							<i class="fa fa-shield nav-icon"/>
+							<span>Detachments</span>
+						</p:link>
+					</li>
+					<li>
+						<p:link outcome="/user/posts">
+							<i class="fa fa-map-pin nav-icon"/>
+							<span>Posts</span>
+						</p:link>
+					</li>
+				</ul>
+			</li>
+			<li class="treeview">
+				<a href="#">
+					<i class="fa fa-user-circle-o nav-icon"/>
+					<span>Human Resource</span>
+					<i class="fa fa-angle-left pull-right"/>
+				</a>
+				<ul class="treeview-menu">
+					<li>
+						<a href="#">
+							<i class="fa fa-users nav-icon"/>
+							<span>Employee Management</span>
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							<i class="fa fa-credit-card nav-icon"/>
+							<span>Loans / Deductions</span>
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							<i class="fa fa-calendar nav-icon"/>
+							<span>Holidays</span>
+						</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">
+					<i class="fa fa-clock-o nav-icon"/>
+					<span>Time Tracking</span>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<i class="fa fa-money nav-icon"/>
+					<span>Payroll</span>
+				</a>
+			</li>
+		</sec:authorize>
+	</ul>
+
+</ui:composition>

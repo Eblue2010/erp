@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                template="#{layoutMB.template}">
+
+    <ui:define name="head">
+        <title>Eliteblue ERP</title>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon.ico']}"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon-16x16.png']}" sizes="16x16"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon-32x32.png']}" sizes="32x32"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon-96x96.png']}" sizes="96x96"/>
+        <link rel="manifest" href="manifest.json"/>
+        <meta name="theme-color" content="#444"/>
+        <meta name="mobile-web-app-capable" content="yes"/>
+        <f:loadBundle var="msg" basename="starter"/>
+        <h:outputStylesheet library="css" name="starter.css"/>
+        <style type="text/css">
+            .index-intro {
+                width: 100%;
+                background-color: #FFBF00;
+            }
+            .index-intro .container {
+                padding: 0px;
+            }
+            .index-intro .jumbotron {
+                padding: 200px 200px 200px 120px;
+                margin: 0px;
+                background-image: url(#{request.contextPath}/resources/images/eliteblue-banner-1.png);
+                background-repeat: no-repeat;
+                color: #fff;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="head-end">
+        <ui:param name="renderBreadCrumb" value="false"/>
+    </ui:define>
+
+    <ui:define name="content-header">
+        <section class="main-container">
+            <article class="index-intro">
+                <div class="container">
+                    <div class="jumbotron">
+                        <div class="row">
+                            <div class="col-sm-6"></div>
+                            <div class="col-sm-6">
+                                <h1>Engagement</h1>
+                                <p>It speaks loyalty to the corporation, the care and concern that comes with it beyond treating work as “a mere job” but instead as a “way of life.”</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </section>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="title">
+        <p:outputPanel rendered="#{erpPostForm.isNew()}">
+            <h1>New Post</h1>
+        </p:outputPanel>
+        <p:outputPanel rendered="#{not erpPostForm.isNew()}">
+            <h1>Edit Post</h1>
+        </p:outputPanel>
+    </ui:define>
+
+    <ui:define name="description">
+        <p:outputPanel rendered="#{erpPostForm.isNew()}">
+            Create a new Post.
+        </p:outputPanel>
+        <p:outputPanel rendered="#{not erpPostForm.isNew()}">
+            Update Post information.
+        </p:outputPanel>
+    </ui:define>
+
+    <ui:define name="body">
+        <f:metadata>
+            <f:viewParam name="detachmentId" value="#{erpPostForm.detachmentId}" converter="javax.faces.Long"/>
+            <!--<f:viewParam name="locationId" value="#{erpPostForm.locationId}" converter="javax.faces.Long"/>-->
+            <f:viewParam name="id" value="#{erpPostForm.id}" converter="javax.faces.Long"/>
+            <f:event type="preRenderView" listener="#{erpPostForm.init}"/>
+        </f:metadata>
+
+        <h:form id="form" prependId="false">
+            <h:messages/>
+
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <div id="main-buttons" class="hidden-sm hidden-xs">
+                        <p:commandButton value="Save" action="#{erpPostForm.save}" update="@form"
+                                         icon="fa fa-check" styleClass="btn-primary"/>
+                        <p:spacer width="5" rendered="#{erpPostForm.isNew()}"/>
+                        <p:commandButton value="Clear" action="#{erpPostForm.clear}" process="@this"
+                                         icon="fa fa-refresh" styleClass="btn-success"
+                                         update="@form" rendered="#{erpPostForm.isNew()}" resetValues="true"/>
+                        <p:spacer width="5" rendered="#{not erpPostForm.isNew()}"/>
+
+                        <p:commandButton value="Delete" action="#{erpPostForm.remove}" process="@this"
+                                         rendered="#{not erpPostForm.isNew()}" icon="fa fa-trash"
+                                         styleClass="btn-danger">
+                            <f:setPropertyActionListener value="true"
+                                                         target="#{facesContext.externalContext.flash.keepMessages}"/>
+                            <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger"/>
+                        </p:commandButton>
+                        <p:spacer width="5"/>
+                        <p:commandButton value="Back" onclick="window.history.back();" type="button" icon="fa fa-reply"/>
+                    </div>
+                    <p:separator/>
+
+                    <div class="box-body">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Detachment Name</label>
+                                <label class="col-sm-10">#{erpPostForm.detachment.name}</label>
+                            </div>
+                            <p:spacer width="5"/>
+                            <label for="inputName" class="col-sm-2 control-label">Post Name</label>
+
+                            <div class="col-sm-10">
+                                <p:inputText autocomplete="off" value="#{erpPostForm.erpPost.name}" class="form-control" id="inputName" placeholder="Name"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-danger box-solid">
+                <p:commandButton value="Yes" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes"
+                                 icon="fa fa-check"/>
+                <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no"
+                                 icon="fa fa-close"/>
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+</ui:composition>
