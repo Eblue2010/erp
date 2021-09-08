@@ -20,7 +20,7 @@ public class ErpPost extends CoreEntity {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name="erp_detachment_id", nullable=false)
+    @JoinColumn(name = "erp_detachment_id", nullable = false)
     private ErpDetachment erpDetachment;
 
     public Long getId() {

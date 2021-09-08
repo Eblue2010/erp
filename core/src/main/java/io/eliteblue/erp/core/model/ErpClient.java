@@ -20,7 +20,7 @@ public class ErpClient extends CoreEntity {
     @Size(min = 1, max = 50)
     private String name;
 
-    @OneToMany(mappedBy = "erpClient")
+    @OneToMany(mappedBy = "erpClient", cascade = CascadeType.MERGE, orphanRemoval = true)
     private Set<ErpDetachment> erpDetachments;
 
     public Long getId() {

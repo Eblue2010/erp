@@ -24,12 +24,12 @@ public class ErpDetachment extends CoreEntity {
     @JoinColumn(name = "AREA_ID", referencedColumnName = "id")
     private OperationsArea location;
 
-    @ManyToOne
-    @JoinColumn(name="erp_client_id", nullable=false)
-    private ErpClient erpClient;
-
-    @OneToMany(mappedBy = "erpDetachment")
+    @OneToMany(mappedBy = "erpDetachment", cascade = CascadeType.MERGE, orphanRemoval = true)
     private Set<ErpPost> posts;
+
+    @ManyToOne
+    @JoinColumn(name = "erp_client_id", nullable = false)
+    private ErpClient erpClient;
 
     public Long getId() {
         return id;
@@ -55,19 +55,19 @@ public class ErpDetachment extends CoreEntity {
         this.location = location;
     }
 
-    public ErpClient getErpClient() {
-        return erpClient;
-    }
-
-    public void setErpClient(ErpClient erpClient) {
-        this.erpClient = erpClient;
-    }
-
     public Set<ErpPost> getPosts() {
         return posts;
     }
 
     public void setPosts(Set<ErpPost> posts) {
         this.posts = posts;
+    }
+
+    public ErpClient getErpClient() {
+        return erpClient;
+    }
+
+    public void setErpClient(ErpClient erpClient) {
+        this.erpClient = erpClient;
     }
 }

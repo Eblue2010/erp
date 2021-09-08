@@ -1,3 +1,3 @@
 FROM adoptopenjdk/openjdk11:latest
-ADD target/admin-starter.jar app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ADD target/admin-starter.war app.war
+ENTRYPOINT ["java", "-jar", "app.war"]
