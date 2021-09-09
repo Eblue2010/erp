@@ -1,9 +1,12 @@
 package io.eliteblue.erp.client.bean;
 
+import io.eliteblue.erp.client.model.lazy.LazyErpUserModel;
 import io.eliteblue.erp.client.service.ErpUserService;
 import org.omnifaces.util.Faces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.util.LangUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import io.eliteblue.erp.client.model.security.ErpUser;
 
@@ -16,10 +19,15 @@ import javax.inject.Named;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
 
 @Named
 @ViewScoped
 public class ErpUserListMB implements Serializable {
+
+    private LazyDataModel<ErpUser> lazyErpUsers;
+
+    private List<ErpUser> filteredErpUsers;
 
     private List<ErpUser> users;
 
@@ -31,6 +39,7 @@ public class ErpUserListMB implements Serializable {
     @PostConstruct
     public void init() {
         users = erpUserService.getAllUsers();
+        lazyErpUsers = new LazyErpUserModel(users);
     }
 
     public List<ErpUser> getUsers() {
@@ -49,11 +58,50 @@ public class ErpUserListMB implements Serializable {
         this.selectedUser = selectedUser;
     }
 
+    public LazyDataModel<ErpUser> getLazyErpUsers() {
+        return lazyErpUsers;
+    }
+
+    public void setLazyErpUsers(LazyDataModel<ErpUser> lazyErpUsers) {
+        this.lazyErpUsers = lazyErpUsers;
+    }
+
+    public List<ErpUser> getFilteredErpUsers() {
+        return filteredErpUsers;
+    }
+
+    public void setFilteredErpUsers(List<ErpUser> filteredErpUsers) {
+        this.filteredErpUsers = filteredErpUsers;
+    }
+
     public void onRowSelect(SelectEvent<ErpUser> event) throws Exception {
-        FacesContext.getCurrentInstance().getExternalContext().redirect("user-form.xhtml?id="+event.getObject().getId());
+        FacesContext.getCurrentInstance().getExternalContext().redirect("user-form.xhtml?id="+selectedUser.getId());
     }
 
     public void onRowUnselect(UnselectEvent<ErpUser> event) throws Exception {
-        FacesContext.getCurrentInstance().getExternalContext().redirect("user-form.xhtml?id="+event.getObject().getId());
+        FacesContext.getCurrentInstance().getExternalContext().redirect("user-form.xhtml?id="+selectedUser.getId());
+    }
+
+    public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
+        String filterText = (filter == null) ? null : filter.toString().trim().toLowerCase();
+        if (LangUtils.isValueBlank(filterText)) {
+            return true;
+        }
+        int filterInt = getInteger(filterText);
+
+        ErpUser erpUser = (ErpUser) value;
+        return erpUser.getUsername().toLowerCase().contains(filterText)
+                || erpUser.getFirstname().toLowerCase().contains(filterText)
+                || erpUser.getLastname().toLowerCase().contains(filterText)
+                || erpUser.getEmail().toString().toLowerCase().contains(filterText);
+    }
+
+    private int getInteger(String string) {
+        try {
+            return Integer.parseInt(string);
+        }
+        catch (NumberFormatException ex) {
+            return 0;
+        }
     }
 }

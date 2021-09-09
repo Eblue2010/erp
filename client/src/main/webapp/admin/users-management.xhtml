@@ -37,11 +37,25 @@
 
                     <p:separator/>
 
-                    <p:dataTable var="user" value="#{erpUserListMB.users}" selectionMode="single"
-                        selection="#{erpUserListMB.selectedUser}" rowKey="#{user.id}">
+                    <p:dataTable id="erpUserTab" var="user" value="#{erpUserListMB.users}" paginator="true" rows="10" selectionMode="single"
+                        paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                        rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+                        emptyMessage="No Users found with given criteria"
+                        globalFilterFunction="#{erpUserListMB.globalFilterFunction}"
+                        filteredValue="#{erpUserListMB.filteredErpUsers}"
+                        widgetVar="erpUserTable" selection="#{erpUserListMB.selectedUser}" rowKey="#{user.id}">
 
                         <p:ajax event="rowSelect" listener="#{erpUserListMB.onRowSelect}"/>
                         <p:ajax event="rowUnselect" listener="#{erpUserListMB.onRowUnselect}"/>
+
+                        <f:facet name="header">
+                            <div class="p-d-flex p-jc-end">
+                                <p:commandButton onclick="$('#form\\:erpUserTab\\:globalFilter').val('').keyup();PF('erpUserTable').filter()" value="clear"/>
+                                <p:inputText id="globalFilter" style="width:20rem" placeholder="Search all columns" autocomplete="off"
+                                     onkeypress="if (event.keyCode === 13)  {PF('erpUserTable').filter(); return false;}"/>
+                                <p:commandButton  class="ui-button" icon="fa fa-search" onclick="PF('erpUserTable').filter()"/>
+                            </div>
+                        </f:facet>
 
                         <p:column headerText="Username">
                             <h:outputText value="#{user.username}" />
