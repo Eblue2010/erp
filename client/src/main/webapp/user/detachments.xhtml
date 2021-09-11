@@ -35,11 +35,24 @@
                         <p:spacer width="5"/>
                     </div>-->
 
-                    <p:dataTable var="detachment" value="#{erpDetachmentListMB.detachments}" selectionMode="single"
-                                 selection="#{erpDetachmentListMB.selectedDetachment}" rowKey="#{detachment.id}">
+                    <p:dataTable id="erpDetachmentTab" var="detachment" value="#{erpDetachmentListMB.detachments}" selectionMode="single"
+                        paginator="true" rows="10" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+                        paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                        emptyMessage="No Users found with given criteria" globalFilterFunction="#{erpDetachmentListMB.globalFilterFunction}"
+                        filteredValue="#{erpDetachmentListMB.filteredErpDetachments}" widgetVar="erpDetachmentTable"
+                        selection="#{erpDetachmentListMB.selectedDetachment}" rowKey="#{detachment.id}">
 
                         <p:ajax event="rowSelect" listener="#{erpDetachmentListMB.onRowSelect}"/>
                         <p:ajax event="rowUnselect" listener="#{erpDetachmentListMB.onRowUnselect}"/>
+
+                        <f:facet name="header">
+                            <div class="p-d-flex p-jc-end">
+                                <p:commandButton onclick="$('#form\\:erpDetachmentTab\\:globalFilter').val('').keyup();PF('erpDetachmentTable').filter()" value="clear"/>
+                                <p:inputText id="globalFilter" style="width:20rem" placeholder="Search all columns" autocomplete="off"
+                                             onkeypress="if (event.keyCode === 13)  {PF('erpDetachmentTable').filter(); return false;}"/>
+                                <p:commandButton  class="ui-button" icon="fa fa-search" onclick="PF('erpDetachmentTable').filter()"/>
+                            </div>
+                        </f:facet>
 
                         <p:column headerText="Detachment Name">
                             <h:outputText value="#{detachment.name}" />

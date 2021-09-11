@@ -37,11 +37,24 @@
 
                     <p:separator/>
 
-                    <p:dataTable var="area" value="#{operationsAreaListMB.areas}" selectionMode="single"
-                                 selection="#{operationsAreaListMB.selectedArea}" rowKey="#{area.id}">
+                    <p:dataTable id="operationsAreaTab" var="area" value="#{operationsAreaListMB.areas}" selectionMode="single"
+                        paginator="true" rows="10" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+                        paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                        emptyMessage="No Users found with given criteria" globalFilterFunction="#{operationsAreaListMB.globalFilterFunction}"
+                        filteredValue="#{operationsAreaListMB.filteredOperationsAreas}" widgetVar="operationsAreaTable"
+                        selection="#{operationsAreaListMB.selectedArea}" rowKey="#{area.id}">
 
                         <p:ajax event="rowSelect" listener="#{operationsAreaListMB.onRowSelect}"/>
                         <p:ajax event="rowUnselect" listener="#{operationsAreaListMB.onRowUnselect}"/>
+
+                        <f:facet name="header">
+                            <div class="p-d-flex p-jc-end">
+                                <p:commandButton onclick="$('#form\\:operationsAreaTab\\:globalFilter').val('').keyup();PF('operationsAreaTable').filter()" value="clear"/>
+                                <p:inputText id="globalFilter" style="width:20rem" placeholder="Search all columns" autocomplete="off"
+                                             onkeypress="if (event.keyCode === 13)  {PF('operationsAreaTable').filter(); return false;}"/>
+                                <p:commandButton  class="ui-button" icon="fa fa-search" onclick="PF('operationsAreaTable').filter()"/>
+                            </div>
+                        </f:facet>
 
                         <p:column headerText="Location">
                             <h:outputText value="#{area.location}" />

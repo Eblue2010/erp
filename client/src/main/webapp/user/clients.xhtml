@@ -37,11 +37,24 @@
 
                     <p:separator/>
 
-                    <p:dataTable var="client" value="#{erpClientListMB.clients}" selectionMode="single"
-                                 selection="#{erpClientListMB.selectedClient}" rowKey="#{client.id}">
+                    <p:dataTable id="erpClientTab" var="client" value="#{erpClientListMB.clients}" selectionMode="single"
+                        paginator="true" rows="10" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+                        paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                        emptyMessage="No Users found with given criteria" globalFilterFunction="#{erpClientListMB.globalFilterFunction}"
+                        filteredValue="#{erpClientListMB.filteredErpClients}" widgetVar="erpClientTable"
+                        selection="#{erpClientListMB.selectedClient}" rowKey="#{client.id}">
 
                         <p:ajax event="rowSelect" listener="#{erpClientListMB.onRowSelect}"/>
                         <p:ajax event="rowUnselect" listener="#{erpClientListMB.onRowUnselect}"/>
+
+                        <f:facet name="header">
+                            <div class="p-d-flex p-jc-end">
+                                <p:commandButton onclick="$('#form\\:erpClientTab\\:globalFilter').val('').keyup();PF('erpClientTable').filter()" value="clear"/>
+                                <p:inputText id="globalFilter" style="width:20rem" placeholder="Search all columns" autocomplete="off"
+                                             onkeypress="if (event.keyCode === 13)  {PF('erpClientTable').filter(); return false;}"/>
+                                <p:commandButton  class="ui-button" icon="fa fa-search" onclick="PF('erpClientTable').filter()"/>
+                            </div>
+                        </f:facet>
 
                         <p:column headerText="Client Name">
                             <h:outputText value="#{client.name}" />

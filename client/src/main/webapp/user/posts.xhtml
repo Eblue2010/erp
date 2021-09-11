@@ -35,11 +35,24 @@
                         <p:spacer width="5"/>
                     </div>-->
 
-                    <p:dataTable var="post" value="#{erpPostListMB.posts}" selectionMode="single"
-                                 selection="#{erpPostListMB.selectedPost}" rowKey="#{post.id}">
+                    <p:dataTable id="erpPostTab" var="post" value="#{erpPostListMB.posts}" selectionMode="single"
+                        paginator="true" rows="10" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+                        paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                        emptyMessage="No Users found with given criteria" globalFilterFunction="#{erpPostListMB.globalFilterFunction}"
+                        filteredValue="#{erpPostListMB.filteredErpPosts}" widgetVar="erpPostTable"
+                        selection="#{erpPostListMB.selectedPost}" rowKey="#{post.id}">
 
                         <p:ajax event="rowSelect" listener="#{erpPostListMB.onRowSelect}"/>
                         <p:ajax event="rowUnselect" listener="#{erpPostListMB.onRowUnselect}"/>
+
+                        <f:facet name="header">
+                            <div class="p-d-flex p-jc-end">
+                                <p:commandButton onclick="$('#form\\:erpPostTab\\:globalFilter').val('').keyup();PF('erpPostTable').filter()" value="clear"/>
+                                <p:inputText id="globalFilter" style="width:20rem" placeholder="Search all columns" autocomplete="off"
+                                             onkeypress="if (event.keyCode === 13)  {PF('erpPostTable').filter(); return false;}"/>
+                                <p:commandButton  class="ui-button" icon="fa fa-search" onclick="PF('erpPostTable').filter()"/>
+                            </div>
+                        </f:facet>
 
                         <p:column headerText="Post Name">
                             <h:outputText value="#{post.name}" />
