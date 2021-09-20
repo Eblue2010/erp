@@ -1,15 +1,15 @@
 package io.eliteblue.erp.core.bean;
 
 import io.eliteblue.erp.core.converters.OperationsAreaConverter;
+import io.eliteblue.erp.core.lazy.LazyEmployeeModel;
 import io.eliteblue.erp.core.lazy.LazyErpPostModel;
-import io.eliteblue.erp.core.model.ErpClient;
-import io.eliteblue.erp.core.model.ErpDetachment;
-import io.eliteblue.erp.core.model.ErpPost;
-import io.eliteblue.erp.core.model.OperationsArea;
+import io.eliteblue.erp.core.model.*;
 import io.eliteblue.erp.core.service.ErpClientService;
 import io.eliteblue.erp.core.service.ErpDetachmentService;
+import io.eliteblue.erp.core.service.ErpEmployeeService;
 import io.eliteblue.erp.core.service.OperationsAreaService;
 import org.omnifaces.util.Faces;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.LazyDataModel;
@@ -40,6 +40,9 @@ public class ErpDetachmentForm implements Serializable {
     @Autowired
     private OperationsAreaService operationsAreaService;
 
+    @Autowired
+    private ErpEmployeeService erpEmployeeService;
+
     private Long id;
     private Long clientId;
     private ErpDetachment erpDetachment;
@@ -51,6 +54,11 @@ public class ErpDetachmentForm implements Serializable {
     private List<ErpPost> filteredErpPosts;
     private List<ErpPost> posts;
     private ErpPost selectedPost;
+
+    private List<ErpEmployee> employees;
+    private List<ErpEmployee> filteredEmployees;
+    private LazyDataModel<ErpEmployee> lazyErpEmployees;
+    private ErpEmployee selectedEmployee;
 
     public void init() {
         if(Faces.isAjaxRequest()) {
@@ -64,6 +72,8 @@ public class ErpDetachmentForm implements Serializable {
                 clientId = client.getId();
                 posts = new ArrayList<ErpPost>(erpDetachment.getPosts());
                 lazyErpPosts = new LazyErpPostModel(posts);
+                employees = new ArrayList<>(erpDetachment.getAssignedEmployees());
+                lazyErpEmployees = new LazyEmployeeModel(employees);
             }
         } else {
             erpDetachment = new ErpDetachment();
@@ -160,8 +170,44 @@ public class ErpDetachmentForm implements Serializable {
         this.filteredErpPosts = filteredErpPosts;
     }
 
+    public List<ErpEmployee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<ErpEmployee> employees) {
+        this.employees = employees;
+    }
+
+    public List<ErpEmployee> getFilteredEmployees() {
+        return filteredEmployees;
+    }
+
+    public ErpEmployee getSelectedEmployee() {
+        return selectedEmployee;
+    }
+
+    public void setSelectedEmployee(ErpEmployee selectedEmployee) {
+        this.selectedEmployee = selectedEmployee;
+    }
+
+    public void setFilteredEmployees(List<ErpEmployee> filteredEmployees) {
+        this.filteredEmployees = filteredEmployees;
+    }
+
+    public LazyDataModel<ErpEmployee> getLazyErpEmployees() {
+        return lazyErpEmployees;
+    }
+
+    public void setLazyErpEmployees(LazyDataModel<ErpEmployee> lazyErpEmployees) {
+        this.lazyErpEmployees = lazyErpEmployees;
+    }
+
     public String newPostPressed() {
         return "post-form?detachmentId="+id+"faces-redirect=true&includeViewParams=true";
+    }
+
+    public String newEmployeePressed() {
+        return "employee-assign?detachmentId="+id+"faces-redirect=true&includeViewParams=true";
     }
 
     public String backBtnPressed() { return "client-form?id="+clientId+"faces-redirect=true&includeViewParams=true"; }
@@ -194,6 +240,22 @@ public class ErpDetachmentForm implements Serializable {
         return erpPost.getName().toLowerCase().contains(filterText);
     }
 
+    public boolean globalEmployeeFilterFunction(Object value, Object filter, Locale locale) {
+        String filterText = (filter == null) ? null : filter.toString().trim().toLowerCase();
+        if (LangUtils.isValueBlank(filterText)) {
+            return true;
+        }
+        int filterInt = getInteger(filterText);
+
+        ErpEmployee erpEmployee = (ErpEmployee) value;
+        return erpEmployee.getFirstname().toLowerCase().contains(filterText)
+                || erpEmployee.getLastname().toLowerCase().contains(filterText)
+                || erpEmployee.getGender().name().toLowerCase().contains(filterText)
+                || erpEmployee.getEmployeeId().toLowerCase().contains(filterText)
+                || erpEmployee.getStatus().name().toLowerCase().contains(filterText)
+                || erpEmployee.getEmail().toLowerCase().contains(filterText);
+    }
+
     private int getInteger(String string) {
         try {
             return Integer.parseInt(string);
@@ -201,6 +263,19 @@ public class ErpDetachmentForm implements Serializable {
         catch (NumberFormatException ex) {
             return 0;
         }
+    }
+
+    public void removeAssignedEmployee() throws Exception {
+        //this.products.remove(this.selectedProduct);
+        erpDetachment.getAssignedEmployees().remove(this.selectedEmployee);
+        employees.remove(this.selectedEmployee);
+        //System.out.println("ASSIGNED EMPLOYEE COUNT: "+erpDetachment.getAssignedEmployees().size());
+        selectedEmployee.setErpDetachment(null);
+        erpEmployeeService.save(selectedEmployee);
+        erpDetachmentService.save(erpDetachment);
+        selectedEmployee = null;
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Employee1 Removed"));
+        FacesContext.getCurrentInstance().getExternalContext().redirect("detachment-form.xhtml?id="+erpDetachment.getId()+"&clientId="+erpDetachment.getErpClient().getId());
     }
 
     public void remove() throws Exception {

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="metadata">
+        <ui:param name="title" value="Client list"/> <!-- Automatic create breadCrumb and page title when param 'title' is provided. -->
+        <style type="text/css">
+            .ui-datatable .ui-datatable-header {
+                text-align: right !important;
+            }
+
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        <h2 class="align-left">
+            Employees Management
+        </h2>
+    </ui:define>
+
+    <ui:define name="description">
+        You can add, edit and delete Employees.
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form id="form">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <div id="main-buttons" class="hidden-sm hidden-xs">
+                        <p:commandButton action="employee-form?faces-redirect=true" icon="fa fa-plus"
+                                         value="Add Employee" styleClass="btn-primary"/>
+                        <p:spacer width="5"/>
+                    </div>
+
+                    <p:separator/>
+
+                    <p:dataTable id="erpEmployeeTab" var="employee" value="#{erpEmployeeListMB.employees}" selectionMode="single"
+                                 paginator="true" rows="10" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                 emptyMessage="No Employees found with given criteria" globalFilterFunction="#{erpEmployeeListMB.globalFilterFunction}"
+                                 filteredValue="#{erpEmployeeListMB.filteredErpEmployees}" widgetVar="erpEmployeeTable"
+                                 selection="#{erpEmployeeListMB.selectedEmployee}" rowKey="#{employee.id}">
+
+                        <p:ajax event="rowSelect" listener="#{erpEmployeeListMB.onRowSelect}"/>
+                        <p:ajax event="rowUnselect" listener="#{erpEmployeeListMB.onRowUnselect}"/>
+
+                        <f:facet name="header">
+                            <div class="p-d-flex p-jc-end">
+                                <p:commandButton onclick="$('#form\\:erpEmployeeTab\\:globalFilter').val('').keyup();PF('erpEmployeeTable').filter()" value="clear"/>
+                                <p:inputText id="globalFilter" style="width:20rem" placeholder="Search all columns" autocomplete="off"
+                                             onkeypress="if (event.keyCode === 13)  {PF('erpEmployeeTable').filter(); return false;}"/>
+                                <p:commandButton  class="ui-button" icon="fa fa-search" onclick="PF('erpEmployeeTable').filter()"/>
+                            </div>
+                        </f:facet>
+
+                        <p:column headerText="ID">
+                            <h:outputText value="#{employee.employeeId}" />
+                        </p:column>
+
+                        <p:column headerText="First Name">
+                            <h:outputText value="#{employee.firstname}" />
+                        </p:column>
+
+                        <p:column headerText="Last Name">
+                            <h:outputText value="#{employee.lastname}" />
+                        </p:column>
+
+                        <p:column headerText="Gender">
+                            <h:outputText value="#{employee.gender}" />
+                        </p:column>
+
+                        <p:column headerText="Email">
+                            <h:outputText value="#{employee.email}" />
+                        </p:column>
+
+                        <p:column headerText="Status">
+                            <h:outputText value="#{employee.status}" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

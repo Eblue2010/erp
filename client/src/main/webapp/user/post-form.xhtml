@@ -54,6 +54,20 @@
                         <p:spacer width="5"/>
                         <p:commandButton value="Back" action="#{erpPostForm.backBtnPressed}" icon="fa fa-reply"/>
                     </div>
+                    <p:splitButton value="Save" action="#{erpPostForm.save}" update="@form"
+                                   icon="fa fa-check"
+                                   styleClass="hidden-md hidden-lg btn-primary">
+                        <p:menuitem value="Reset" action="#{erpPostForm.clear}"
+                                    process="@this" update="@form" rendered="#{erpPostForm.isNew()}"
+                                    resetValues="true" icon="fa fa-refresh"/>
+                        <p:menuitem value="Delete" action="#{erpPostForm.remove}" process="@this"
+                                    rendered="#{not erpPostForm.isNew()}" icon="fa fa-trash"
+                        >
+                            <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger"/>
+                        </p:menuitem>
+                        <p:separator/>
+                        <p:menuitem value="Back" action="#{erpPostForm.backBtnPressed}" icon="fa fa-reply"/>
+                    </p:splitButton>
                     <p:separator/>
 
                     <div class="box-body">

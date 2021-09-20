@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-public class OperationsAreaService implements CoreErpService<OperationsArea, Long> {
+public class OperationsAreaService extends CoreErpServiceImpl implements CoreErpService<OperationsArea, Long> {
 
     @Autowired
     private OperationsAreaRepository repository;
@@ -35,9 +35,12 @@ public class OperationsAreaService implements CoreErpService<OperationsArea, Lon
         if(operationsArea.getId() == null) {
             operationsArea.setDateCreated(new Date());
             operationsArea.setOperation(DataOperation.CREATED.toString());
+            operationsArea.setCreatedBy(super.getCurrentUser());
         }
         else {
             operationsArea.setOperation(DataOperation.UPDATED.toString());
+            operationsArea.setLastUpdate(new Date());
+            operationsArea.setLastEditedBy(super.getCurrentUser());
         }
         operationsArea.setLastUpdate(new Date());
         repository.save(operationsArea);

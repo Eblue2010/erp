@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-public class ErpPostService implements CoreErpService<ErpPost, Long> {
+public class ErpPostService extends CoreErpServiceImpl implements CoreErpService<ErpPost, Long> {
 
     @Autowired
     private ErpPostRepository repository;
@@ -31,9 +31,12 @@ public class ErpPostService implements CoreErpService<ErpPost, Long> {
         if(erpPost.getId() == null) {
             erpPost.setDateCreated(new Date());
             erpPost.setOperation(DataOperation.CREATED.name());
+            erpPost.setCreatedBy(super.getCurrentUser());
         }
         else {
             erpPost.setOperation(DataOperation.UPDATED.name());
+            erpPost.setLastUpdate(new Date());
+            erpPost.setLastEditedBy(super.getCurrentUser());
         }
         erpPost.setLastUpdate(new Date());
         repository.save(erpPost);

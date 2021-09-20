@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="title">
+        <p:outputPanel rendered="#{erpEmployeeForm.isNew()}">
+            <h1>New Employee</h1>
+        </p:outputPanel>
+        <p:outputPanel rendered="#{not erpEmployeeForm.isNew()}">
+            <h1>Edit Employee</h1>
+        </p:outputPanel>
+    </ui:define>
+
+    <ui:define name="metadata">
+        <style type="text/css">
+            #inputRoles .ui-selectcheckboxmenu-multiple-container {
+                padding: 5px 22px 0 6px;
+            }
+            .box-body .profile-user-img{
+                width: 200px;
+                border: 3px solid #b8c7ce;
+            }
+            .date-input input {
+                display: block;
+                width: 100%;
+                height: 34px;
+                padding: 6px 12px;
+                font-size: 14px;
+                line-height: 1.42857143;
+                color: #555;
+                background-color: #fff;
+                background-image: none;
+                border: 1px solid #ccc;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="description">
+        <p:outputPanel rendered="#{erpEmployeeForm.isNew()}">
+            Create a new employee.
+        </p:outputPanel>
+        <p:outputPanel rendered="#{not erpEmployeeForm.isNew()}">
+            Update employee information.
+        </p:outputPanel>
+    </ui:define>
+
+    <ui:define name="body">
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
+        <f:metadata>
+            <f:viewParam name="id" value="#{erpEmployeeForm.id}" converter="javax.faces.Long"/>
+            <f:event type="preRenderView" listener="#{erpEmployeeForm.init}"/>
+        </f:metadata>
+
+        <h:form id="form" prependId="false">
+            <h:messages/>
+
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <div id="main-buttons" class="hidden-sm hidden-xs">
+                        <p:commandButton value="Save" action="#{erpEmployeeForm.save}" update="@form"
+                                         icon="fa fa-check" styleClass="btn-primary"/>
+                        <p:spacer width="5" rendered="#{erpEmployeeForm.isNew()}"/>
+                        <p:commandButton value="Clear" action="#{erpEmployeeForm.clear}" process="@this"
+                                         icon="fa fa-refresh" styleClass="btn-success"
+                                         update="@form" rendered="#{erpEmployeeForm.isNew()}" resetValues="true"/>
+                        <p:spacer width="5" rendered="#{not erpEmployeeForm.isNew()}"/>
+
+                        <p:commandButton value="Delete" action="#{erpEmployeeForm.remove}" process="@this"
+                                         rendered="#{not erpEmployeeForm.isNew()}" icon="fa fa-trash"
+                                         styleClass="btn-danger">
+                            <f:setPropertyActionListener value="true"
+                                                         target="#{facesContext.externalContext.flash.keepMessages}"/>
+                            <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger"/>
+                        </p:commandButton>
+                        <p:spacer width="5"/>
+                        <p:commandButton value="Back" immediate="true"
+                                         action="employees?faces-redirect=true"
+                                         process="@this"
+                                         icon="fa fa-reply"/>
+                    </div>
+                    <p:splitButton value="Save" action="#{erpEmployeeForm.save}" update="@form"
+                                   icon="fa fa-check"
+                                   styleClass="hidden-md hidden-lg btn-primary">
+                        <p:menuitem value="Reset" action="#{erpEmployeeForm.clear}"
+                                    process="@this" update="@form" rendered="#{erpEmployeeForm.isNew()}"
+                                    resetValues="true" icon="fa fa-refresh"/>
+                        <p:menuitem value="Delete" action="#{erpEmployeeForm.remove}" process="@this"
+                                    rendered="#{not erpEmployeeForm.isNew()}" icon="fa fa-trash"
+                        >
+                            <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger"/>
+                        </p:menuitem>
+                        <p:separator/>
+                        <p:menuitem value="Back" action="employees?faces-redirect=true"
+                                    process="@this" immediate="true"
+                                    icon="fa fa-reply"/>
+                    </p:splitButton>
+                    <p:separator/>
+
+                    <div class="box-body">
+                        <p:outputPanel rendered="#{not erpEmployeeForm.isNew()}">
+                            <div class="row">
+                                <div class="col-md-3" align="center">
+                                    <div class="mx-auto" style="width: 160px;">
+                                        <img class="profile-user-img img-responsive img-circle" src="#{request.contextPath}/resources/images/empty-profile.jpeg" alt="User profile picture"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="text-sm-left mb-2 mb-sm-0">
+                                        <h2>#{erpEmployeeForm.erpEmployee.firstname} #{erpEmployeeForm.erpEmployee.middlename.charAt(0)}. #{erpEmployeeForm.erpEmployee.lastname}</h2>
+                                        <p class="mb-0">ID: #{erpEmployeeForm.erpEmployee.employeeId}</p>
+                                        <div class="text-muted"><small>Updated #{erpEmployeeForm.lastUpdate}</small></div>
+                                        <div class="mt-2">
+                                            <button class="btn btn-primary" type="button">
+                                                <i class="fa fa-fw fa-camera"></i>
+                                                <span>Change Photo</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 text-center text-sm-right">
+                                    <span class="badge badge-secondary">#{erpEmployeeForm.erpEmployee.position}</span>
+                                    <p:outputPanel rendered="#{not erpEmployeeForm.joinedDate != null}">
+                                        <div class="text-muted"><small>#{erpEmployeeForm.joinedDate}</small></div>
+                                    </p:outputPanel>
+                                </div>
+                            </div>
+                            <p:spacer width="2"/>
+                        </p:outputPanel>
+                        <div class="row">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="" class="active nav-link">General Information</a></li>
+                            </ul>
+                            <p:spacer width="2"/>
+                            <div class="tab-content">
+                                <div class="tab-pane-active">
+                                    <div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="firstname">First Name</label>
+                                                <p:inputText autocomplete="off" value="#{erpEmployeeForm.erpEmployee.firstname}" class="form-control" id="firstname" placeholder="First Name"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="middlename">Middle Name</label>
+                                                <p:inputText autocomplete="off" value="#{erpEmployeeForm.erpEmployee.middlename}" class="form-control" id="middlename" placeholder="Middle Name"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="lastname">Last Name</label>
+                                                <p:inputText autocomplete="off" value="#{erpEmployeeForm.erpEmployee.lastname}" class="form-control" id="lastname" placeholder="Last Name"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="form-group">
+                                                <label for="suffix">Suffix</label>
+                                                <p:inputText autocomplete="off" value="#{erpEmployeeForm.erpEmployee.extname}" class="form-control" id="suffix" placeholder="Jr"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="birthplace">Birth Place</label>
+                                                <p:inputText autocomplete="off" value="#{erpEmployeeForm.erpEmployee.birthPlace}" class="form-control" id="birthplace" placeholder="Birth Place"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="birthdate">Birth Date</label>
+                                                <p:datePicker autocomplete="off" id="birthdate" class="date-input" monthNavigator="true" yearNavigator="true" value="#{erpEmployeeForm.erpEmployee.birthDate}"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label>Gender</label>
+                                                <p:selectOneMenu id="inputGender" value="#{erpEmployeeForm.erpEmployee.gender}" style="width:150px">
+                                                    <f:selectItems value="#{erpEmployeeForm.genderValues}"/>
+                                                </p:selectOneMenu>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label>Marital Status</label>
+                                                <p:selectOneMenu id="inputMarital" value="#{erpEmployeeForm.erpEmployee.civilStatus}" style="width:150px">
+                                                    <f:selectItem itemLabel="Select One" itemValue=""/>
+                                                    <f:selectItems value="#{erpEmployeeForm.maritalValues}"/>
+                                                </p:selectOneMenu>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label>Employee Status</label>
+                                                <p:selectOneMenu id="inputStatus" value="#{erpEmployeeForm.erpEmployee.status}" style="width:150px">
+                                                    <f:selectItems value="#{erpEmployeeForm.empStatusValues}"/>
+                                                </p:selectOneMenu>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="distinguishingmark">Distinguishing Marks</label>
+                                                <p:inputText autocomplete="off" value="#{erpEmployeeForm.erpEmployee.marks}" class="form-control" id="distinguishingmark" placeholder="Mole on nose"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="weight">Weight (in pounds)</label>
+                                                <div class="ui-inputgroup">
+                                                    <p:inputNumber minValue="1" decimalPlaces="0" autocomplete="off" value="#{erpEmployeeForm.erpEmployee.weightPound}" id="weight" placeholder="120"/>
+                                                    <span class="ui-inputgroup-addon">lbs</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="height">Height (in centimeters)</label>
+                                                <div class="ui-inputgroup">
+                                                    <p:inputNumber minValue="1" decimalPlaces="0" autocomplete="off" value="#{erpEmployeeForm.erpEmployee.heightCentimeters}" id="height" placeholder="168"/>
+                                                    <span class="ui-inputgroup-addon">cm</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label>Blood Type</label>
+                                                <p:selectOneMenu id="inputBlood" value="#{erpEmployeeForm.erpEmployee.bloodType}" style="width:150px">
+                                                    <f:selectItem itemLabel="Select One" itemValue=""/>
+                                                    <f:selectItems value="#{erpEmployeeForm.bloodValues}"/>
+                                                </p:selectOneMenu>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="email">Email</label>
+                                                <p:inputText autocomplete="off" value="#{erpEmployeeForm.erpEmployee.email}" class="form-control" id="email" placeholder="Email"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="position">Company Position</label>
+                                                <p:inputText autocomplete="off" value="#{erpEmployeeForm.erpEmployee.position}" class="form-control" id="position" placeholder="Position"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p:outputPanel rendered="#{not erpEmployeeForm.isNew()}">
+                            <!--<div class="row">
+                                <div class="col-md-3">
+
+                                </div>
+                                <div class="col-md-3">
+
+                                </div>
+                            </div>-->
+                            <h3>Address</h3>
+                            <p:commandButton action="#{erpEmployeeForm.newAddressPressed}" icon="fa fa-plus"
+                                             value="Add" styleClass="btn-primary"/>
+                            <p:separator/>
+                            <ui:repeat var="addrs" value="#{erpEmployeeForm.erpEmployee.addresses}">
+                                <div class="row">
+                                    <div class="tab-content">
+                                        <div class="tab-pane-active">
+                                            <div class="col-md-12">
+                                                <label style="font-weight:bold;">#{addrs.addressName}</label>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label style="font-weight:bold;">#{addrs.city}</label>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label style="font-weight:bold;">#{addrs.region} #{addrs.postalCode}</label>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label style="font-weight:bold;">#{addrs.postalCode}</label>
+                                            </div>
+                                            <p:commandButton action="#{erpEmployeeForm.editAddressPressed(addrs.id)}" icon="fa fa-pencil"
+                                                             value="Edit" styleClass="btn-primary" style="margin-left:15px;"/>
+                                            <p:separator/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ui:repeat>
+                        </p:outputPanel>
+                    </div>
+                </div>
+            </div>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-danger box-solid">
+                <p:commandButton value="Yes" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes"
+                                 icon="fa fa-check"/>
+                <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no"
+                                 icon="fa fa-close"/>
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -26,6 +26,30 @@ public class CoreEntity {
     @Size(min = 4, max = 50)
     private String operation;
 
+    @Column(name = "LAST_EDITED_BY")
+    @Size(min = 1, max = 50)
+    private String lastEditedBy;
+
+    @Column(name = "CREATED_BY")
+    @Size(min = 1, max = 50)
+    private String createdBy;
+
+    public String getLastEditedBy() {
+        return lastEditedBy;
+    }
+
+    public void setLastEditedBy(String lastEditedBy) {
+        this.lastEditedBy = lastEditedBy;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
     public Date getLastUpdate() {
         return lastUpdate;
     }

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="title">
+        <h2>Cities List</h2>
+    </ui:define>
+
+    <ui:define name="description">
+        You can view list of cities available.
+    </ui:define>
+
+    <ui:define name="body">
+        <f:metadata>
+            <f:viewParam name="id" value="#{erpCityListMB.id}" converter="javax.faces.Long"/>
+            <f:event type="preRenderView" listener="#{erpCityListMB.init}"/>
+        </f:metadata>
+
+        <h:form id="form" prependId="false">
+            <h:messages/>
+
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <div id="main-buttons">
+                        <p:commandButton value="Back" action="regions.xhtml?faces-redirect=true" icon="fa fa-reply"/>
+                    </div>
+                    <p:separator/>
+
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="inputName" class="col-sm-2 control-label">Region</label>
+
+                            <div class="col-sm-10">
+                                <p:inputText autocomplete="off" value="#{erpCityListMB.erpRegion.name}" class="form-control" id="inputName" placeholder="Name" readonly="true" />
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <h3>Cities</h3>
+                    <p:separator/>
+
+                    <p:dataTable id="erpCitiesTab" var="city" value="#{erpCityListMB.cities}"
+                        paginator="true" rows="10" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+                        paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                        emptyMessage="No Users found with given criteria" globalFilterFunction="#{erpCityListMB.globalFilterFunction}"
+                        filteredValue="#{erpCityListMB.filteredErpCities}" widgetVar="erpCitiesTable"
+                        rowKey="#{detachment.id}">
+
+                        <p:ajax event="rowSelect" listener="#{erpCityListMB.onRowSelect}"/>
+                        <p:ajax event="rowUnselect" listener="#{erpCityListMB.onRowUnselect}"/>
+
+                        <f:facet name="header">
+                            <div class="p-d-flex p-jc-end">
+                                <p:commandButton onclick="$('#form\\:erpCitiesTab\\:globalFilter').val('').keyup();PF('erpCitiesTable').filter()" value="clear"/>
+                                <p:inputText id="globalFilter" style="width:20rem" placeholder="Search all columns" autocomplete="off"
+                                             onkeypress="if (event.keyCode === 13)  {PF('erpCitiesTable').filter(); return false;}"/>
+                                <p:commandButton  class="ui-button" icon="fa fa-search" onclick="PF('erpCitiesTable').filter()"/>
+                            </div>
+                        </f:facet>
+
+                        <p:column headerText="City Name">
+                            <h:outputText value="#{city.name}" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

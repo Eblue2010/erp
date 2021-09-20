@@ -29,7 +29,7 @@
         <h:form id="form">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <div id="main-buttons" class="hidden-sm hidden-xs">
+                    <div id="main-buttons">
                         <p:commandButton action="client-form?faces-redirect=true" icon="fa fa-plus"
                                          value="New Client" styleClass="btn-primary"/>
                         <p:spacer width="5"/>
@@ -40,7 +40,7 @@
                     <p:dataTable id="erpClientTab" var="client" value="#{erpClientListMB.clients}" selectionMode="single"
                         paginator="true" rows="10" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                        emptyMessage="No Users found with given criteria" globalFilterFunction="#{erpClientListMB.globalFilterFunction}"
+                        emptyMessage="No Clients found with given criteria" globalFilterFunction="#{erpClientListMB.globalFilterFunction}"
                         filteredValue="#{erpClientListMB.filteredErpClients}" widgetVar="erpClientTable"
                         selection="#{erpClientListMB.selectedClient}" rowKey="#{client.id}">
 

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="title">
+        <h1>Assign Employees</h1>
+    </ui:define>
+
+    <ui:define name="description">
+        Assign employees to a detachment.
+    </ui:define>
+
+    <ui:define name="body">
+        <f:metadata>
+            <f:viewParam name="detachmentId" value="#{erpEmployeeAssign.detachmentId}" converter="javax.faces.Long"/>
+            <!--<f:viewParam name="locationId" value="#{erpPostForm.locationId}" converter="javax.faces.Long"/>-->
+            <f:event type="preRenderView" listener="#{erpEmployeeAssign.init}"/>
+        </f:metadata>
+
+        <h:form id="form" prependId="false">
+            <h:messages/>
+
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <div id="main-buttons" class="hidden-sm hidden-xs">
+                        <p:commandButton value="Save" action="#{erpEmployeeAssign.save}" update="@form"
+                                         icon="fa fa-check" styleClass="btn-primary"/>
+                        <p:spacer width="5"/>
+                        <p:commandButton value="Back" action="#{erpEmployeeAssign.backBtnPressed}" icon="fa fa-reply"/>
+                    </div>
+                    <p:splitButton value="Save" action="#{erpEmployeeAssign.save}" update="@form"
+                                   icon="fa fa-check"
+                                   styleClass="hidden-md hidden-lg btn-primary">
+                        <p:separator/>
+                        <p:menuitem value="Back" action="#{erpEmployeeAssign.backBtnPressed}" icon="fa fa-reply"/>
+                    </p:splitButton>
+                    <p:separator/>
+
+                    <div class="box-body">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Detachment Name</label>
+                                <label class="col-sm-10">#{erpEmployeeAssign.detachment.name}</label>
+                            </div>
+                        </div>
+                        <p:spacer width="5"/>
+                        <div class="form-group">
+                            <label for="inputEmployees" class="col-sm-2 control-label">Assign Employees</label>
+
+                            <div class="col-sm-10">
+                                <p:selectCheckboxMenu id="inputEmployees" value="#{erpEmployeeAssign.selectedEmployees}" label="Employees" style="min-width: 60rem"
+                                                      multiple="true" filter="true" filterMatchMode="startsWith" panelStyle="width: 60rem" scrollHeight="250">
+                                    <f:selectItems value="#{erpEmployeeAssign.assignedEmployees}"/>
+                                </p:selectCheckboxMenu>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

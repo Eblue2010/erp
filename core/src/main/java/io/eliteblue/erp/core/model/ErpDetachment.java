@@ -31,6 +31,9 @@ public class ErpDetachment extends CoreEntity {
     @JoinColumn(name = "erp_client_id", nullable = false)
     private ErpClient erpClient;
 
+    @OneToMany(mappedBy = "erpDetachment", cascade = CascadeType.ALL)
+    private Set<ErpEmployee> assignedEmployees;
+
     public Long getId() {
         return id;
     }
@@ -69,5 +72,13 @@ public class ErpDetachment extends CoreEntity {
 
     public void setErpClient(ErpClient erpClient) {
         this.erpClient = erpClient;
+    }
+
+    public Set<ErpEmployee> getAssignedEmployees() {
+        return assignedEmployees;
+    }
+
+    public void setAssignedEmployees(Set<ErpEmployee> assignedEmployees) {
+        this.assignedEmployees = assignedEmployees;
     }
 }

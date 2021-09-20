@@ -122,6 +122,6 @@
 	<modules>
 		<module>client</module>
         <module>core</module>
-    </modules>
+	</modules>
 
 </project>

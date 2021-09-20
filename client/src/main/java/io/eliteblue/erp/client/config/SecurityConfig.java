@@ -1,9 +1,8 @@
 package io.eliteblue.erp.client.config;
 
-import io.eliteblue.erp.client.config.CustomAuthenticationProvider;
 import io.eliteblue.erp.client.handler.OAuth2LoginSuccessHandler;
-import io.eliteblue.erp.client.service.ErpOAuthUserService;
-import io.eliteblue.erp.client.service.ErpUserDetailsService;
+import io.eliteblue.erp.core.service.ErpOAuthUserService;
+import io.eliteblue.erp.core.service.ErpUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

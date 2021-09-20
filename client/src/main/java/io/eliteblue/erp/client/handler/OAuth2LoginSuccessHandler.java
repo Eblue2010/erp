@@ -1,10 +1,10 @@
 package io.eliteblue.erp.client.handler;
 
-import io.eliteblue.erp.client.model.security.Authority;
-import io.eliteblue.erp.client.model.security.AuthorityName;
-import io.eliteblue.erp.client.model.security.ErpOAuthUser;
-import io.eliteblue.erp.client.model.security.ErpUser;
-import io.eliteblue.erp.client.service.ErpUserService;
+import io.eliteblue.erp.core.model.security.Authority;
+import io.eliteblue.erp.core.model.security.AuthorityName;
+import io.eliteblue.erp.core.model.security.ErpOAuthUser;
+import io.eliteblue.erp.core.model.security.ErpUser;
+import io.eliteblue.erp.core.service.ErpUserService;
 import io.eliteblue.erp.client.util.PasswordGenerator;
 import io.eliteblue.erp.core.constants.DataOperation;
 import io.eliteblue.erp.core.model.OperationsArea;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Component;
@@ -59,6 +58,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
                     oAuthUser.setLastLogged(new Date());
                     oAuthUser.setLocked(false);
                     oAuthUser.setEnabled(erpUser.getEnabled());
+                    oAuthUser.setOperationsAreas(new ArrayList<>(erpUser.getLocations()));
                 } else {
                     isLogout = true;
                 }

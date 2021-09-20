@@ -38,7 +38,7 @@
                     <p:dataTable id="erpDetachmentTab" var="detachment" value="#{erpDetachmentListMB.detachments}" selectionMode="single"
                         paginator="true" rows="10" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                        emptyMessage="No Users found with given criteria" globalFilterFunction="#{erpDetachmentListMB.globalFilterFunction}"
+                        emptyMessage="No Detachments found with given criteria" globalFilterFunction="#{erpDetachmentListMB.globalFilterFunction}"
                         filteredValue="#{erpDetachmentListMB.filteredErpDetachments}" widgetVar="erpDetachmentTable"
                         selection="#{erpDetachmentListMB.selectedDetachment}" rowKey="#{detachment.id}">
 

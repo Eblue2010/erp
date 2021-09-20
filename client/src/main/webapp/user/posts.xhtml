@@ -38,7 +38,7 @@
                     <p:dataTable id="erpPostTab" var="post" value="#{erpPostListMB.posts}" selectionMode="single"
                         paginator="true" rows="10" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                        emptyMessage="No Users found with given criteria" globalFilterFunction="#{erpPostListMB.globalFilterFunction}"
+                        emptyMessage="No Posts found with given criteria" globalFilterFunction="#{erpPostListMB.globalFilterFunction}"
                         filteredValue="#{erpPostListMB.filteredErpPosts}" widgetVar="erpPostTable"
                         selection="#{erpPostListMB.selectedPost}" rowKey="#{post.id}">
 

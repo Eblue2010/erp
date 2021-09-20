@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-public class ErpDetachmentService implements CoreErpService<ErpDetachment, Long> {
+public class ErpDetachmentService extends CoreErpServiceImpl implements CoreErpService<ErpDetachment, Long> {
 
     @Autowired
     private ErpDetachmentRepository repository;
@@ -31,9 +31,12 @@ public class ErpDetachmentService implements CoreErpService<ErpDetachment, Long>
         if(erpDetachment.getId() == null) {
             erpDetachment.setDateCreated(new Date());
             erpDetachment.setOperation(DataOperation.CREATED.name());
+            erpDetachment.setCreatedBy(super.getCurrentUser());
         }
         else {
             erpDetachment.setOperation(DataOperation.UPDATED.name());
+            erpDetachment.setLastUpdate(new Date());
+            erpDetachment.setLastEditedBy(super.getCurrentUser());
         }
         erpDetachment.setLastUpdate(new Date());
         repository.save(erpDetachment);
