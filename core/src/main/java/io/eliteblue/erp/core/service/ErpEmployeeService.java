@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +32,21 @@ public class ErpEmployeeService extends CoreErpServiceImpl implements CoreErpSer
         return repository.findAll();
     }
 
+    public List<ErpEmployee> getAllHired() {
+        return repository.getAllHired();
+    }
+
+    public List<ErpEmployee> getAllFiltered() {
+        List<OperationsArea> assignedLocations = CurrentUserUtil.getOperationsAreas();
+        if(CurrentUserUtil.isAdmin()) {
+            return repository.findAll();
+        }
+        if(CurrentUserUtil.isHeadOffice()) {
+            return repository.getAllFilteredByDeleted();
+        }
+        return repository.getAllFiltered(assignedLocations);
+    }
+
     public List<ErpEmployee> getAllByAssignedLocation() {
         OperationsArea assignedLocation = null;
         return repository.findByAssignedLocation(assignedLocation);
@@ -39,6 +55,10 @@ public class ErpEmployeeService extends CoreErpServiceImpl implements CoreErpSer
     @Override
     public ErpEmployee findById(Long aLong) {
         return repository.getOne(aLong);
+    }
+
+    public List<ErpEmployee> findByFirstnameAndLastname(String firstname, String lastname) {
+        return repository.findByFirstnameIgnoreCaseAndLastnameIgnoreCase(firstname, lastname);
     }
 
     @Override
@@ -64,9 +84,9 @@ public class ErpEmployeeService extends CoreErpServiceImpl implements CoreErpSer
             erpEmployee.setCreatedBy(currentUserName);
             erpEmployee.setLastUpdate(new Date());
             erpEmployee.setDateCreated(new Date());
-            BigDecimal seq = repository.getNextValSequence();
+            BigDecimal seq = repository.getNextSequenceByName("emp_area_"+operationAreaCode+"_seq");
             Long seqNum = seq.longValue();
-            if(seq.intValue() <= 1) {
+            /*if(seq.intValue() <= 1) {
                 Integer isEmpty = repository.getIsEmpty();
                 if(isEmpty != 0){
                     seqNum += 1;
@@ -74,7 +94,7 @@ public class ErpEmployeeService extends CoreErpServiceImpl implements CoreErpSer
             }
             else {
                 seqNum += 1;
-            }
+            }*/
             erpEmployee.setEmployeeId(operationAreaCode + decimalFormat.format(seqNum));
         }
         else {

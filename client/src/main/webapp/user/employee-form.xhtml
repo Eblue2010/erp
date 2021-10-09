@@ -111,6 +111,7 @@
                                         <h2>#{erpEmployeeForm.erpEmployee.firstname} #{erpEmployeeForm.erpEmployee.middlename.charAt(0)}. #{erpEmployeeForm.erpEmployee.lastname}</h2>
                                         <p class="mb-0">ID: #{erpEmployeeForm.erpEmployee.employeeId}</p>
                                         <div class="text-muted"><small>Updated #{erpEmployeeForm.lastUpdate}</small></div>
+                                        <div class="text-muted"><small>Last update by <b>#{erpEmployeeForm.erpEmployee.lastEditedBy}</b></small></div>
                                         <div class="mt-2">
                                             <button class="btn btn-primary" type="button">
                                                 <i class="fa fa-fw fa-camera"></i>
@@ -248,42 +249,122 @@
                                                 <p:inputText autocomplete="off" value="#{erpEmployeeForm.erpEmployee.position}" class="form-control" id="position" placeholder="Position"/>
                                             </div>
                                         </div>
+                                        <p:outputPanel rendered="#{erpEmployeeForm.erpEmployee.joinedDate != null}">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="joinedDate">Joined Date</label>
+                                                    <p:datePicker autocomplete="off" id="joinedDate" class="date-input" monthNavigator="true" yearNavigator="true" value="#{erpEmployeeForm.erpEmployee.joinedDate}"/>
+                                                </div>
+                                            </div>
+                                        </p:outputPanel>
+                                        <p:outputPanel rendered="#{erpEmployeeForm.erpEmployee.resignedDate != null}">
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="resignedDate">Date Reigned</label>
+                                                <p:datePicker autocomplete="off" id="resignedDate" class="date-input" monthNavigator="true" yearNavigator="true" value="#{erpEmployeeForm.erpEmployee.resignedDate}"/>
+                                            </div>
+                                        </div>
+                                        </p:outputPanel>
+                                    </div>
+                                    <div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="bankName">Bank Name</label>
+                                                <p:inputText autocomplete="off" value="#{erpEmployeeForm.erpEmployee.bankName}" class="form-control" id="bankName" placeholder="Bank Name"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="bankAccNum">Bank Account Number</label>
+                                                <p:inputText autocomplete="off" value="#{erpEmployeeForm.erpEmployee.bankAccountNumber}" class="form-control" id="bankAccNum" placeholder="Account Number"/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <p:outputPanel rendered="#{not erpEmployeeForm.isNew()}">
-                            <!--<div class="row">
-                                <div class="col-md-3">
-
+                            <p:spacer width="10"/>
+                            <div class="row">
+                                <div class="col-md-2 d-flex justify-content-center text-left">
+                                    <label style="font-weight:bold; font-size: 20px">Employee ID(s)</label>
                                 </div>
-                                <div class="col-md-3">
-
+                                <div class="col-md-2">
+                                    <p:commandButton action="#{erpEmployeeForm.newIDPressed}" icon="fa fa-plus" value="Add" styleClass="btn-primary"/>
                                 </div>
-                            </div>-->
-                            <h3>Address</h3>
-                            <p:commandButton action="#{erpEmployeeForm.newAddressPressed}" icon="fa fa-plus"
-                                             value="Add" styleClass="btn-primary"/>
+                            </div>
+                            <p:separator/>
+                            <ui:repeat var="erpIds" value="#{erpEmployeeForm.erpEmployee.erpEmployeeIDList}">
+                                <div class="row">
+                                    <div class="tab-content">
+                                        <div class="tab-pane-active">
+                                            <div class="col-md-12" style="font-size: 16px; margin: 5px;">
+                                                <p:commandButton class="rounded-button" icon="pi pi-pencil" value="Edit"
+                                                                 action="#{erpEmployeeForm.editIDPressed(erpIds.id)}"/>
+                                                <p:spacer width="10"/>
+                                                <label style="font-weight:bold;">#{erpIds.idName.name}:</label> #{erpIds.identificationNumber}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ui:repeat>
+                        </p:outputPanel>
+                        <p:outputPanel rendered="#{not erpEmployeeForm.isNew()}">
+                            <p:spacer width="10"/>
+                            <div class="row">
+                                <div class="col-md-3 d-flex justify-content-center text-left" style="padding-right:0px;">
+                                    <label style="font-weight:bold; font-size: 20px">Employee Address</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <p:commandButton action="#{erpEmployeeForm.newAddressPressed}" icon="fa fa-plus" value="Add" styleClass="btn-primary"/>
+                                </div>
+                            </div>
                             <p:separator/>
                             <ui:repeat var="addrs" value="#{erpEmployeeForm.erpEmployee.addresses}">
                                 <div class="row">
                                     <div class="tab-content">
-                                        <div class="tab-pane-active">
+                                        <div class="tab-pane-active" style="font-size:16px;">
                                             <div class="col-md-12">
-                                                <label style="font-weight:bold;">#{addrs.addressName}</label>
+                                                <label style="font-weight:normal;">#{addrs.addressName}</label>
                                             </div>
                                             <div class="col-md-12">
-                                                <label style="font-weight:bold;">#{addrs.city}</label>
+                                                <label style="font-weight:normal;">#{addrs.city}</label>
                                             </div>
                                             <div class="col-md-12">
-                                                <label style="font-weight:bold;">#{addrs.region} #{addrs.postalCode}</label>
+                                                <label style="font-weight:normal;">#{addrs.region}</label>
                                             </div>
                                             <div class="col-md-12">
-                                                <label style="font-weight:bold;">#{addrs.postalCode}</label>
+                                                <label style="font-weight:normal;">#{addrs.postalCode}</label>
                                             </div>
-                                            <p:commandButton action="#{erpEmployeeForm.editAddressPressed(addrs.id)}" icon="fa fa-pencil"
-                                                             value="Edit" styleClass="btn-primary" style="margin-left:15px;"/>
+                                            <p:commandButton action="#{erpEmployeeForm.editAddressPressed(addrs.id)}"
+                                                             value="Edit" class="rounded-button" icon="pi pi-pencil" style="margin-left:15px;"/>
                                             <p:separator/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ui:repeat>
+                        </p:outputPanel>
+                        <p:outputPanel rendered="#{not erpEmployeeForm.isNew()}">
+                            <p:spacer width="10"/>
+                            <div class="row">
+                                <div class="col-md-2 d-flex justify-content-center text-left">
+                                    <label style="font-weight:bold; font-size: 20px">Contact Info(s)</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <p:commandButton action="#{erpEmployeeForm.newContactPressed}" icon="fa fa-plus" value="Add" styleClass="btn-primary"/>
+                                </div>
+                            </div>
+                            <p:separator/>
+                            <ui:repeat var="erpContacts" value="#{erpEmployeeForm.erpEmployee.contacts}">
+                                <div class="row">
+                                    <div class="tab-content">
+                                        <div class="tab-pane-active">
+                                            <div class="col-md-12" style="font-size: 16px; margin: 5px;">
+                                                <p:commandButton class="rounded-button" icon="pi pi-pencil" value="Edit"
+                                                                 action="#{erpEmployeeForm.editContactPressed(erpContacts.id)}"/>
+                                                <p:spacer width="10"/>
+                                                #{erpContacts.contactNumber}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

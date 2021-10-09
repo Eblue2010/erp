@@ -37,4 +37,12 @@ public class RegionCityService {
     public ErpCity findCityById(Long id) {
         return cityRepository.getOne(id);
     }
+
+    public void removeCity(ErpCity city) {
+        cityRepository.delete(city);
+    }
+
+    public void saveCity(ErpCity city) {
+        cityRepository.save(city);
+    }
 }

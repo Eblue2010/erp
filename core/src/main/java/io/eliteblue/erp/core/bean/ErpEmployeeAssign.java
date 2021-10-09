@@ -51,11 +51,12 @@ public class ErpEmployeeAssign implements Serializable {
             employees = new ArrayList<>();
             selectedEmployees = new ArrayList<>();
         }
-        List<ErpEmployee> employeesList = erpEmployeeService.getAll();
+        List<ErpEmployee> employeesList = erpEmployeeService.getAllHired();
         assignedEmployees = new HashMap<>();
         for(ErpEmployee e: employeesList) {
             assignedEmployees.put(e.getFirstname()+" "+e.getLastname(), e);
         }
+        //System.out.println("ASSIGNED LENGTH: "+assignedEmployees.size());
     }
 
     public Long getDetachmentId() {
@@ -111,6 +112,7 @@ public class ErpEmployeeAssign implements Serializable {
             }
             for(ErpEmployee emp: selectedEmployees) {
                 emp.setErpDetachment(detachment);
+                emp.setAssignedLocation(detachment.getLocation());
                 detachment.getAssignedEmployees().add(emp);
                 //erpEmployeeService.save(emp);
             }

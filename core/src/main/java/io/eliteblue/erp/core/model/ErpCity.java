@@ -11,10 +11,10 @@ public class ErpCity {
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "city_seq")
-    @SequenceGenerator(name = "city_seq", sequenceName = "city", allocationSize = 1, initialValue = 100)
+    @SequenceGenerator(name = "city_seq", sequenceName = "city_seq", allocationSize = 1, initialValue = 200)
     private Long id;
 
-    @Column(name = "NAME", length = 50, unique = true)
+    @Column(name = "NAME", length = 50)
     @NotNull
     @Size(min = 2, max = 50)
     private String name;

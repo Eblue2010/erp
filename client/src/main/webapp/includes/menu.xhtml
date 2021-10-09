@@ -142,11 +142,26 @@
 		</li>
 		</sec:authorize>
 		<sec:authorize access="hasAnyRole('SYS_ADMIN', 'TIMETRACKING')">
-		<li>
+		<li class="treeview">
 			<a href="#">
 				<i class="fa fa-clock-o nav-icon"/>
 				<span>Time Tracking</span>
+				<i class="fa fa-angle-left pull-right"/>
 			</a>
+			<ul class="treeview-menu">
+				<li>
+					<p:link outcome="/user/workschedules">
+						<i class="fa fa-calendar-o nav-icon"/>
+						<span>Work Schedule</span>
+					</p:link>
+				</li>
+				<li>
+					<a href="#">
+						<i class="fa fa-table nav-icon"/>
+						<span>DTR</span>
+					</a>
+				</li>
+			</ul>
 		</li>
 		</sec:authorize>
 		<sec:authorize access="hasAnyRole('SYS_ADMIN', 'PAYROLL')">

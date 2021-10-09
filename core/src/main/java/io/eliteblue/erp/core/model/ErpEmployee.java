@@ -52,6 +52,10 @@ public class ErpEmployee extends CoreEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date joinedDate;
 
+    @Column(name = "RESIGNED_DATE")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date resignedDate;
+
     @Column(name = "BIRTH_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date birthDate;
@@ -83,13 +87,19 @@ public class ErpEmployee extends CoreEntity {
     private Double weightPound;
 
     @Column(name = "HEIGHT_CM")
-    private Integer heightCentimeters;
+    private Double heightCentimeters;
 
     @Column(name = "MARKS", length = 50)
     private String marks;
 
     @Column(name = "COMPANY_POSITION", length = 50)
     private String position;
+
+    @Column(name = "BANK_NAME", length = 50)
+    private String bankName;
+
+    @Column(name = "BANK_ACC_NUM", length = 50)
+    private String bankAccountNumber;
 
     @OneToOne
     @JoinColumn(name = "AREA_ID", referencedColumnName = "id")
@@ -104,6 +114,9 @@ public class ErpEmployee extends CoreEntity {
     @ManyToOne
     @JoinColumn(name = "erp_detachment_id")
     private ErpDetachment erpDetachment;
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.MERGE, orphanRemoval = true)
+    private Set<ErpEmployeeID> erpEmployeeIDList;
 
     public Long getId() {
         return id;
@@ -167,6 +180,14 @@ public class ErpEmployee extends CoreEntity {
 
     public void setJoinedDate(Date joinedDate) {
         this.joinedDate = joinedDate;
+    }
+
+    public Date getResignedDate() {
+        return resignedDate;
+    }
+
+    public void setResignedDate(Date resignedDate) {
+        this.resignedDate = resignedDate;
     }
 
     public Date getBirthDate() {
@@ -233,11 +254,11 @@ public class ErpEmployee extends CoreEntity {
         this.weightPound = weightPound;
     }
 
-    public Integer getHeightCentimeters() {
+    public Double getHeightCentimeters() {
         return heightCentimeters;
     }
 
-    public void setHeightCentimeters(Integer heightCentimeters) {
+    public void setHeightCentimeters(Double heightCentimeters) {
         this.heightCentimeters = heightCentimeters;
     }
 
@@ -255,6 +276,22 @@ public class ErpEmployee extends CoreEntity {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    public String getBankAccountNumber() {
+        return bankAccountNumber;
+    }
+
+    public void setBankAccountNumber(String bankAccountNumber) {
+        this.bankAccountNumber = bankAccountNumber;
     }
 
     public Set<Address> getAddresses() {
@@ -287,5 +324,13 @@ public class ErpEmployee extends CoreEntity {
 
     public void setAssignedLocation(OperationsArea assignedLocation) {
         this.assignedLocation = assignedLocation;
+    }
+
+    public Set<ErpEmployeeID> getErpEmployeeIDList() {
+        return erpEmployeeIDList;
+    }
+
+    public void setErpEmployeeIDList(Set<ErpEmployeeID> erpEmployeeIDList) {
+        this.erpEmployeeIDList = erpEmployeeIDList;
     }
 }

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="metadata">
+        <ui:param name="title" value="Detachment list"/> <!-- Automatic create breadCrumb and page title when param 'title' is provided. -->
+        <style type="text/css">
+            .ui-datatable .ui-datatable-header {
+                text-align: right !important;
+            }
+
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        <h2 class="align-left">
+            Work Schedule Management
+        </h2>
+    </ui:define>
+
+    <ui:define name="description">
+        You can add, edit and delete Work Schedules.
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form id="form">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <div id="main-buttons" class="hidden-sm hidden-xs">
+                        <p:commandButton action="workschedule-form?faces-redirect=true" icon="fa fa-plus"
+                                         value="New Work Schedule" styleClass="btn-primary"/>
+                        <p:spacer width="5"/>
+                    </div>
+
+                    <p:dataTable id="workScheduleTab" var="workschedule" value="#{workScheduleListMB.workSchedules}" selectionMode="single"
+                        paginator="true" rows="10" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+                        paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                        emptyMessage="No Schedules found with given criteria" globalFilterFunction="#{workScheduleListMB.globalFilterFunction}"
+                        filteredValue="#{workScheduleListMB.filteredErpWorkSchedules}" widgetVar="workScheduleTable"
+                        selection="#{workScheduleListMB.selectedWorkSchedule}" rowKey="#{workschedule.id}">
+
+                        <p:ajax event="rowSelect" listener="#{workScheduleListMB.onRowSelect}"/>
+                        <p:ajax event="rowUnselect" listener="#{workScheduleListMB.onRowUnselect}"/>
+
+                        <f:facet name="header">
+                            <div class="p-d-flex p-jc-end">
+                                <p:commandButton onclick="$('#form\\:workScheduleTab\\:globalFilter').val('').keyup();PF('workScheduleTable').filter()" value="clear"/>
+                                <p:inputText id="globalFilter" style="width:20rem" placeholder="Search all columns" autocomplete="off"
+                                             onkeypress="if (event.keyCode === 13)  {PF('workScheduleTable').filter(); return false;}"/>
+                                <p:commandButton  class="ui-button" icon="fa fa-search" onclick="PF('workScheduleTable').filter()"/>
+                            </div>
+                        </f:facet>
+
+                        <p:column headerText="Description">
+                            <h:outputText value="#{workschedule.description}" />
+                        </p:column>
+                        <p:column headerText="Start Date">
+                            <h:outputText value="#{workschedule.startDate}">
+                                <!--<f:convertDateTime type="date" pattern="MM/dd/yyyy" />-->
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="End Date">
+                            <h:outputText value="#{workschedule.stopDate}">
+                                <!--<f:convertDateTime type="date" pattern="MM/dd/yyyy" />-->
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

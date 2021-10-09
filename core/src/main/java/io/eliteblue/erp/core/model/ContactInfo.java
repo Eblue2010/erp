@@ -6,7 +6,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "EMPLOYEE_CONTACT")
-public class ContactInfo {
+public class ContactInfo extends CoreEntity {
 
     @Id
     @Column(name = "ID")
@@ -14,9 +14,8 @@ public class ContactInfo {
     @SequenceGenerator(name = "contact_seq", sequenceName = "contact", allocationSize = 1, initialValue = 10)
     private Long id;
 
-    @Column(name = "CONTACT_NUMBER", length = 50, unique = true)
+    @Column(name = "CONTACT_NUMBER", length = 50)
     @NotNull
-    @Size(min = 2, max = 50)
     private String contactNumber;
 
     @ManyToOne

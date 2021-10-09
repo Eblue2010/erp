@@ -34,7 +34,8 @@ public class ErpEmployeeListMB implements Serializable {
 
     @PostConstruct
     public void init() {
-        employees = employeeService.getAll();
+        //employees = employeeService.getAll();
+        employees = employeeService.getAllFiltered();
         lazyErpEmployees = new LazyEmployeeModel(employees);
     }
 
@@ -91,7 +92,7 @@ public class ErpEmployeeListMB implements Serializable {
             || erpEmployee.getGender().name().toLowerCase().contains(filterText)
             || erpEmployee.getEmployeeId().toLowerCase().contains(filterText)
             || erpEmployee.getStatus().name().toLowerCase().contains(filterText)
-            || erpEmployee.getEmail().toLowerCase().contains(filterText);
+            || (erpEmployee.getFirstname().toLowerCase()+" "+erpEmployee.getLastname().toLowerCase()).contains(filterText);
     }
 
     private int getInteger(String string) {

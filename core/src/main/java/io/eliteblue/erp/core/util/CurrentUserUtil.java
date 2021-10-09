@@ -3,6 +3,7 @@ package io.eliteblue.erp.core.util;
 import io.eliteblue.erp.core.model.OperationsArea;
 import io.eliteblue.erp.core.model.security.ErpOAuthUser;
 import io.eliteblue.erp.core.model.security.ErpUserDetails;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -56,5 +57,36 @@ public class CurrentUserUtil {
             ErpOAuthUser oAuthUser = getOAuthUser(principal);
             return oAuthUser.getOperationsAreas();
         }
+    }
+
+    public static boolean isAdmin() {
+        Object principal = getPrincipal();
+        if(principal instanceof ErpUserDetails) {
+            ErpUserDetails details = getUserDetails(principal);
+            for(GrantedAuthority g: details.getAuthorities()) {
+                if(g.getAuthority().equals("ROLE_SYS_ADMIN")) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            ErpOAuthUser oAuthUser = getOAuthUser(principal);
+            for(GrantedAuthority g: oAuthUser.getAuthorities()) {
+                if(g.getAuthority().equals("ROLE_SYS_ADMIN")) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    public static boolean isHeadOffice() {
+        List<OperationsArea> areas = getOperationsAreas();
+        for(OperationsArea a: areas) {
+            if(a.getLocation().equals("HEAD OFFICE")) {
+                return true;
+            }
+        }
+        return false;
     }
 }

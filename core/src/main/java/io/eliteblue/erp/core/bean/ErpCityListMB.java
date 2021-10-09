@@ -4,11 +4,16 @@ import io.eliteblue.erp.core.lazy.LazyCityModel;
 import io.eliteblue.erp.core.model.ErpCity;
 import io.eliteblue.erp.core.model.ErpRegion;
 import io.eliteblue.erp.core.service.RegionCityService;
+import io.eliteblue.erp.core.util.EmpMastProcessUtil;
+import io.eliteblue.erp.core.util.ExcelUtils;
 import org.omnifaces.util.Faces;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.util.LangUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -25,11 +30,15 @@ public class ErpCityListMB implements Serializable {
     @Autowired
     private RegionCityService regionCityService;
 
+    @Autowired
+    private EmpMastProcessUtil processUtil;
+
     private LazyDataModel<ErpCity> lazyErpCities;
     private List<ErpCity> filteredErpCities;
     private List<ErpCity> cities;
     private Long id;
     private ErpRegion erpRegion;
+    private ErpCity selectedCity;
 
     public void init() {
         if(Faces.isAjaxRequest()) {
@@ -82,6 +91,28 @@ public class ErpCityListMB implements Serializable {
 
     public void setErpRegion(ErpRegion erpRegion) {
         this.erpRegion = erpRegion;
+    }
+
+    public ErpCity getSelectedCity() {
+        return selectedCity;
+    }
+
+    public void setSelectedCity(ErpCity selectedCity) {
+        this.selectedCity = selectedCity;
+    }
+
+    public void onRowSelect(SelectEvent<ErpCity> event) throws Exception {
+        FacesContext.getCurrentInstance().getExternalContext().redirect("city-form.xhtml?id="+selectedCity.getId());
+    }
+
+    public void onRowUnselect(UnselectEvent<ErpCity> event) throws Exception {
+        FacesContext.getCurrentInstance().getExternalContext().redirect("city-form.xhtml?id="+selectedCity.getId());
+    }
+
+    public String newCityPressed() throws Exception {
+        return "city-form?regionId="+id+"faces-redirect=true&includeViewParams=true";
+        //processUtil.startProcess();
+        //return "cities?id="+id+"faces-redirect=true&includeViewParams=true";
     }
 
     public boolean globalFilterFunction(Object value, Object filter, Locale locale) {

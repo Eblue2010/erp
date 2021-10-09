@@ -16,10 +16,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.github.adminfaces.template.util.Assert.has;
 
@@ -75,6 +72,9 @@ public class ErpEmployeeForm implements Serializable {
         for(BloodType b: BloodType.values()) {
             bloodValues.put(b.toString(), b);
         }
+        /*if(erpEmployee.getBirthDate() != null) {
+            System.out.println("BIRTHDATE: "+simpleDateFormat.format(erpEmployee.getBirthDate()));
+        }*/
     }
 
     public Long getId() {
@@ -141,12 +141,28 @@ public class ErpEmployeeForm implements Serializable {
         this.erpEmployee = erpEmployee;
     }
 
+    public String newIDPressed() {
+        return "employee-id-form?employeeId="+id+"faces-redirect=true&includeViewParams=true";
+    }
+
     public String newAddressPressed() {
         return "address-form?employeeId="+id+"faces-redirect=true&includeViewParams=true";
     }
 
     public String editAddressPressed(Long addressId) {
         return "address-form?employeeId="+id+"&id="+addressId+"&faces-redirect=true&includeViewParams=true";
+    }
+
+    public String newContactPressed() {
+        return "contact-info-form?employeeId="+id+"faces-redirect=true&includeViewParams=true";
+    }
+
+    public String editContactPressed(Long addressId) {
+        return "contact-info-form?employeeId="+id+"&id="+addressId+"&faces-redirect=true&includeViewParams=true";
+    }
+
+    public String editIDPressed(Long erpEmployeeID) {
+        return "employee-id-form?employeeId="+id+"&id="+erpEmployeeID+"&faces-redirect=true&includeViewParams=true";
     }
 
     public boolean isNew() {
@@ -169,6 +185,7 @@ public class ErpEmployeeForm implements Serializable {
 
     public void save() throws Exception {
         if(erpEmployee != null) {
+            List<ErpEmployee> results = employeeService.findByFirstnameAndLastname(erpEmployee.getFirstname().toUpperCase(), erpEmployee.getLastname().toUpperCase());
             if(erpEmployee.getWeightPound() != null) {
                 erpEmployee.setWeightKilo(erpEmployee.getWeightPound() * 0.454);
             }
@@ -176,11 +193,22 @@ public class ErpEmployeeForm implements Serializable {
                 if(erpEmployee.getStatus().equals(EmployeeStatus.HIRED) && erpEmployee.getJoinedDate() == null) {
                     erpEmployee.setJoinedDate(new Date());
                 }
+                if(erpEmployee.getStatus().equals(EmployeeStatus.RESIGNED) && erpEmployee.getResignedDate() == null) {
+                    erpEmployee.setResignedDate(new Date());
+                }
             }
-            employeeService.save(erpEmployee);
-            String userFullName = erpEmployee.getFirstname()+ " " +erpEmployee.getLastname();
-            addDetailMessage("EMPLOYEE SAVED", userFullName+".", FacesMessage.SEVERITY_INFO);
-            FacesContext.getCurrentInstance().getExternalContext().redirect("employees.xhtml");
+            // camelize names: firstname, lastname, middlename
+            if(erpEmployee.getId() == null && (results != null && results.size() > 0)) {
+                String userFullName = erpEmployee.getFirstname() + " " + erpEmployee.getLastname();
+                addDetailMessage("An Employee named "+userFullName+ " already exist","cannot add employee.", FacesMessage.SEVERITY_ERROR);
+                //FacesContext.getCurrentInstance().getExternalContext().redirect("employees.xhtml");
+            }
+            else {
+                employeeService.save(erpEmployee);
+                String userFullName = erpEmployee.getFirstname() + " " + erpEmployee.getLastname();
+                addDetailMessage("EMPLOYEE SAVED", userFullName + ".", FacesMessage.SEVERITY_INFO);
+                FacesContext.getCurrentInstance().getExternalContext().redirect("employees.xhtml");
+            }
         }
     }
 

@@ -97,6 +97,48 @@
                     <p:outputPanel rendered="#{not erpDetachmentForm.isNew()}">
                         <h3>Posts</h3>
                         <p:separator/>
+                        <div id="fourth-buttons" class="hidden-sm hidden-xs">
+                            <p:commandButton action="#{erpDetachmentForm.newTimePressed}" icon="fa fa-plus"
+                                             value="New Time Schedule" styleClass="btn-primary"/>
+                            <p:spacer width="5"/>
+                        </div>
+
+                        <p:dataTable id="timeScheduleTab" var="timesched" value="#{erpDetachmentForm.erpTimeSchedules}" selectionMode="single"
+                                     paginator="true" rows="10" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     emptyMessage="No Time Schedule found with given criteria" globalFilterFunction="#{erpDetachmentForm.globalFilterFunction}"
+                                     filteredValue="#{erpDetachmentForm.filteredErpTimeSchedules}" widgetVar="timeScheduleTable"
+                                     selection="#{erpDetachmentForm.selectedErpTimeSchedule}" rowKey="#{timesched.id}">
+
+                            <p:ajax event="rowSelect" listener="#{erpDetachmentForm.onRowSelectTime}"/>
+                            <p:ajax event="rowUnselect" listener="#{erpDetachmentForm.onRowUnselectTime}"/>
+
+                            <f:facet name="header">
+                                <div class="p-d-flex p-jc-end">
+                                    <p:commandButton onclick="$('#form\\:timeScheduleTab\\:globalFilter').val('').keyup();PF('timeScheduleTable').filter()" value="clear"/>
+                                    <p:inputText id="globalFilter" style="width:20rem" placeholder="Search all columns" autocomplete="off"
+                                                 onkeypress="if (event.keyCode === 13)  {PF('timeScheduleTable').filter(); return false;}"/>
+                                    <p:commandButton  class="ui-button" icon="fa fa-search" onclick="PF('timeScheduleTable').filter()"/>
+                                </div>
+                            </f:facet>
+
+                            <p:column headerText="Schedule Start">
+                                <h:outputText value="#{(timesched.startTime.toString()).substring(0, (timesched.startTime.toString().length() - 3))}" />
+                            </p:column>
+
+                            <p:column headerText="Schedule End">
+                                <h:outputText value="#{(timesched.endTime.toString()).substring(0, (timesched.endTime.toString().length() - 3))}" />
+                            </p:column>
+
+                            <p:column headerText="Description">
+                                <h:outputText value="#{timesched.description}" />
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+
+                    <p:outputPanel rendered="#{not erpDetachmentForm.isNew()}">
+                        <h3>Posts</h3>
+                        <p:separator/>
                             <div id="secondary-buttons" class="hidden-sm hidden-xs">
                                 <p:commandButton action="#{erpDetachmentForm.newPostPressed}" icon="fa fa-plus"
                                                  value="New Post" styleClass="btn-primary"/>

@@ -1,5 +1,5 @@
 package io.eliteblue.erp.core.constants;
 
 public enum CivilStatus {
-    SINGLE, MARRIED, WIDOWED, DIVORCED
+    SINGLE, MARRIED, LIVE_IN, SEPARATED, WIDOWED, DIVORCED
 }

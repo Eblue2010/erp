@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="title">
+        <p:outputPanel rendered="#{workAssignmentForm.isNew()}">
+            <h1>New Work Assignment</h1>
+        </p:outputPanel>
+        <p:outputPanel rendered="#{not workAssignmentForm.isNew()}">
+            <h1>Edit Work Assignment</h1>
+        </p:outputPanel>
+    </ui:define>
+
+    <ui:define name="description">
+        <p:outputPanel rendered="#{workAssignmentForm.isNew()}">
+            Create a new Work Assignment.
+        </p:outputPanel>
+        <p:outputPanel rendered="#{not workAssignmentForm.isNew()}">
+            Update Work Assignment.
+        </p:outputPanel>
+    </ui:define>
+
+    <ui:define name="body">
+        <f:metadata>
+            <f:viewParam name="workScheduleId" value="#{workAssignmentForm.workScheduleId}" converter="javax.faces.Long"/>
+            <!--<f:viewParam name="locationId" value="#{erpPostForm.locationId}" converter="javax.faces.Long"/>-->
+            <f:viewParam name="id" value="#{workAssignmentForm.id}" converter="javax.faces.Long"/>
+            <f:event type="preRenderView" listener="#{workAssignmentForm.init}"/>
+        </f:metadata>
+
+        <h:form id="form" prependId="false">
+            <h:messages/>
+
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <div id="main-buttons" class="hidden-sm hidden-xs">
+                        <p:commandButton value="Save" action="#{workAssignmentForm.save}" update="@form"
+                                         icon="fa fa-check" styleClass="btn-primary"/>
+                        <p:spacer width="5" rendered="#{workAssignmentForm.isNew()}"/>
+                        <p:commandButton value="Clear" action="#{workAssignmentForm.clear}" process="@this"
+                                         icon="fa fa-refresh" styleClass="btn-success"
+                                         update="@form" rendered="#{workAssignmentForm.isNew()}" resetValues="true"/>
+                        <p:spacer width="5" rendered="#{not workAssignmentForm.isNew()}"/>
+
+                        <p:commandButton value="Delete" action="#{workAssignmentForm.remove}" process="@this"
+                                         rendered="#{not workAssignmentForm.isNew()}" icon="fa fa-trash"
+                                         styleClass="btn-danger">
+                            <f:setPropertyActionListener value="true"
+                                                         target="#{facesContext.externalContext.flash.keepMessages}"/>
+                            <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger"/>
+                        </p:commandButton>
+                        <p:spacer width="5"/>
+                        <p:commandButton value="Back" action="#{workAssignmentForm.backBtnPressed}" icon="fa fa-reply"/>
+                    </div>
+                    <p:splitButton value="Save" action="#{workAssignmentForm.save}" update="@form"
+                                   icon="fa fa-check"
+                                   styleClass="hidden-md hidden-lg btn-primary">
+                        <p:menuitem value="Reset" action="#{workAssignmentForm.clear}"
+                                    process="@this" update="@form" rendered="#{workAssignmentForm.isNew()}"
+                                    resetValues="true" icon="fa fa-refresh"/>
+                        <p:menuitem value="Delete" action="#{workAssignmentForm.remove}" process="@this"
+                                    rendered="#{not workAssignmentForm.isNew()}" icon="fa fa-trash"
+                        >
+                            <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger"/>
+                        </p:menuitem>
+                        <p:separator/>
+                        <p:menuitem value="Back" action="#{workAssignmentForm.backBtnPressed}" icon="fa fa-reply"/>
+                    </p:splitButton>
+                    <p:separator/>
+
+                    <div class="box-body">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Work Schedule</label>
+                                <label class="col-sm-10">#{workAssignmentForm.workSchedule.description}</label>
+                            </div>
+                        </div>
+                        <p:spacer width="5"/>
+                        <div class="form-group">
+                            <label for="inputEmp" class="col-sm-2 control-label">Assigned Employee</label>
+
+                            <div class="col-sm-10">
+                                <p:selectOneMenu id="inputEmp" value="#{workAssignmentForm.employee.id}" style="width:150px"
+                                                 effect="fade" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItems value="#{workAssignmentForm.employees}" var="selectedEmployee"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <p:spacer width="5"/>
+                        <div class="form-group">
+                            <label for="workAssn" class="col-sm-2 control-label">Work Assignment</label>
+                            <div class="col-sm-10">
+                                <p:inputText autocomplete="off" value="#{workAssignmentForm.erpWorkAssignment.workAssignment}" class="form-control" id="workAssn"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p:outputPanel rendered="#{not workAssignmentForm.isNew()}">
+                        <h3>Work Days</h3>
+                        <p:separator/>
+                        <div id="secondary-buttons" class="hidden-sm hidden-xs">
+                            <p:commandButton action="#{workAssignmentForm.newWorkDayPressed}" icon="fa fa-plus"
+                                             value="Add Work Day" styleClass="btn-primary"/>
+                            <p:spacer width="5"/>
+                        </div>
+
+                        <p:dataTable id="workDayTab" var="workDay" value="#{workAssignmentForm.workDays}" selectionMode="single"
+                                     paginator="true" rows="10" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     emptyMessage="No Work Days found with given criteria" globalFilterFunction="#{workAssignmentForm.globalFilterFunction}"
+                                     filteredValue="#{workAssignmentForm.filteredErpWorkDay}" widgetVar="workDayTable"
+                                     selection="#{workAssignmentForm.selectedWorkDay}" rowKey="#{workDay.id}">
+
+                            <p:ajax event="rowSelect" listener="#{workAssignmentForm.onRowSelect}"/>
+                            <p:ajax event="rowUnselect" listener="#{workAssignmentForm.onRowUnselect}"/>
+
+                            <f:facet name="header">
+                                <div class="p-d-flex p-jc-end">
+                                    <p:commandButton onclick="$('#form\\:workDayTab\\:globalFilter').val('').keyup();PF('workDayTable').filter()" value="clear"/>
+                                    <p:inputText id="globalFilter" style="width:20rem" placeholder="Search all columns" autocomplete="off"
+                                                 onkeypress="if (event.keyCode === 13)  {PF('workDayTable').filter(); return false;}"/>
+                                    <p:commandButton  class="ui-button" icon="fa fa-search" onclick="PF('workDayTable').filter()"/>
+                                </div>
+                            </f:facet>
+
+                            <p:column headerText="Start Shift">
+                                <h:outputText value="#{workDay.shiftStart}" />
+                            </p:column>
+                            <p:column headerText="End Shift">
+                                <h:outputText value="#{workDay.shiftEnd}" />
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+                </div>
+            </div>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-danger box-solid">
+                <p:commandButton value="Yes" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes"
+                                 icon="fa fa-check"/>
+                <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no"
+                                 icon="fa fa-close"/>
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

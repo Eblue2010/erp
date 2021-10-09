@@ -5,11 +5,11 @@
                 template="#{layoutMB.template}">
 
     <ui:define name="title">
-        <p:outputPanel rendered="#{addressForm.isNew()}">
-            <h1>New Address</h1>
+        <p:outputPanel rendered="#{erpEmployeeIDForm.isNew()}">
+            <h1>New ID</h1>
         </p:outputPanel>
-        <p:outputPanel rendered="#{not addressForm.isNew()}">
-            <h1>Edit Address</h1>
+        <p:outputPanel rendered="#{not erpEmployeeIDForm.isNew()}">
+            <h1>Edit ID</h1>
         </p:outputPanel>
     </ui:define>
 
@@ -23,19 +23,19 @@
     </ui:define>
 
     <ui:define name="description">
-        <p:outputPanel rendered="#{addressForm.isNew()}">
-            Create a new Address.
+        <p:outputPanel rendered="#{erpEmployeeIDForm.isNew()}">
+            Create a new ID.
         </p:outputPanel>
-        <p:outputPanel rendered="#{not addressForm.isNew()}">
-            Update Address information.
+        <p:outputPanel rendered="#{not erpEmployeeIDForm.isNew()}">
+            Update ID information.
         </p:outputPanel>
     </ui:define>
 
     <ui:define name="body">
         <f:metadata>
-            <f:viewParam name="employeeId" value="#{addressForm.employeeId}" converter="javax.faces.Long"/>
-            <f:viewParam name="id" value="#{addressForm.id}" converter="javax.faces.Long"/>
-            <f:event type="preRenderView" listener="#{addressForm.init}"/>
+            <f:viewParam name="employeeId" value="#{erpEmployeeIDForm.employeeId}" converter="javax.faces.Long"/>
+            <f:viewParam name="id" value="#{erpEmployeeIDForm.id}" converter="javax.faces.Long"/>
+            <f:event type="preRenderView" listener="#{erpEmployeeIDForm.init}"/>
         </f:metadata>
 
         <h:form id="form" prependId="false">
@@ -44,42 +44,42 @@
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <div id="main-buttons" class="hidden-sm hidden-xs">
-                        <p:commandButton value="Save" action="#{addressForm.save}" update="@form"
+                        <p:commandButton value="Save" action="#{erpEmployeeIDForm.save}" update="@form"
                                          icon="fa fa-check" styleClass="btn-primary"/>
-                        <p:spacer width="5" rendered="#{addressForm.isNew()}"/>
-                        <p:commandButton value="Clear" action="#{addressForm.clear}" process="@this"
+                        <p:spacer width="5" rendered="#{erpEmployeeIDForm.isNew()}"/>
+                        <p:commandButton value="Clear" action="#{erpEmployeeIDForm.clear}" process="@this"
                                          icon="fa fa-refresh" styleClass="btn-success"
-                                         update="@form" rendered="#{addressForm.isNew()}" resetValues="true"/>
-                        <p:spacer width="5" rendered="#{not addressForm.isNew()}"/>
+                                         update="@form" rendered="#{erpEmployeeIDForm.isNew()}" resetValues="true"/>
+                        <p:spacer width="5" rendered="#{not erpEmployeeIDForm.isNew()}"/>
 
-                        <p:commandButton value="Delete" action="#{addressForm.remove}" process="@this"
-                                         rendered="#{not addressForm.isNew()}" icon="fa fa-trash"
+                        <p:commandButton value="Delete" action="#{erpEmployeeIDForm.remove}" process="@this"
+                                         rendered="#{not erpEmployeeIDForm.isNew()}" icon="fa fa-trash"
                                          styleClass="btn-danger">
                             <f:setPropertyActionListener value="true"
                                                          target="#{facesContext.externalContext.flash.keepMessages}"/>
                             <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger"/>
                         </p:commandButton>
                         <p:spacer width="5"/>
-                        <p:commandButton value="Back" action="#{addressForm.backBtnPressed}" icon="fa fa-reply"/>
+                        <p:commandButton value="Back" action="#{erpEmployeeIDForm.backBtnPressed}" icon="fa fa-reply"/>
                     </div>
-                    <p:splitButton value="Save" action="#{addressForm.save}" update="@form"
+                    <p:splitButton value="Save" action="#{erpEmployeeIDForm.save}" update="@form"
                                    icon="fa fa-check"
                                    styleClass="hidden-md hidden-lg btn-primary">
-                        <p:menuitem value="Reset" action="#{addressForm.clear}"
-                                    process="@this" update="@form" rendered="#{addressForm.isNew()}"
+                        <p:menuitem value="Reset" action="#{erpEmployeeIDForm.clear}"
+                                    process="@this" update="@form" rendered="#{erpEmployeeIDForm.isNew()}"
                                     resetValues="true" icon="fa fa-refresh"/>
-                        <p:menuitem value="Delete" action="#{addressForm.remove}" process="@this"
-                                    rendered="#{not addressForm.isNew()}" icon="fa fa-trash"
+                        <p:menuitem value="Delete" action="#{erpEmployeeIDForm.remove}" process="@this"
+                                    rendered="#{not erpEmployeeIDForm.isNew()}" icon="fa fa-trash"
                         >
                             <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger"/>
                         </p:menuitem>
                         <p:separator/>
-                        <p:menuitem value="Back" action="#{addressForm.backBtnPressed}" icon="fa fa-reply"/>
+                        <p:menuitem value="Back" action="#{erpEmployeeIDForm.backBtnPressed}" icon="fa fa-reply"/>
                     </p:splitButton>
                     <p:separator/>
 
                     <div class="box-body">
-                        <p:outputPanel rendered="#{addressForm.erpEmployee != null}">
+                        <p:outputPanel rendered="#{erpEmployeeIDForm.erpEmployee != null}">
                             <div class="row">
                                 <div class="col-md-3" align="center">
                                     <div class="mx-auto" style="width: 160px;">
@@ -88,10 +88,10 @@
                                 </div>
                                 <div class="col-md-7">
                                     <div class="text-sm-left mb-2 mb-sm-0">
-                                        <h2>#{addressForm.erpEmployee.firstname} #{addressForm.erpEmployee.middlename.charAt(0)}. #{addressForm.erpEmployee.lastname}</h2>
-                                        <p class="mb-0">ID: #{addressForm.erpEmployee.employeeId}</p>
-                                        <div class="text-muted"><small>Updated #{addressForm.lastUpdate}</small></div>
-                                        <div class="text-muted"><small>Last update by <b>#{addressForm.erpEmployee.lastEditedBy}</b></small></div>
+                                        <h2>#{erpEmployeeIDForm.erpEmployee.firstname} #{erpEmployeeIDForm.erpEmployee.middlename.charAt(0)}. #{erpEmployeeIDForm.erpEmployee.lastname}</h2>
+                                        <p class="mb-0">ID: #{erpEmployeeIDForm.erpEmployee.employeeId}</p>
+                                        <div class="text-muted"><small>Updated #{erpEmployeeIDForm.lastUpdate}</small></div>
+                                        <div class="text-muted"><small>Last update by <b>#{erpEmployeeIDForm.erpEmployee.lastEditedBy}</b></small></div>
                                         <!--<div class="mt-2">
                                             <button class="btn btn-primary" type="button">
                                                 <i class="fa fa-fw fa-camera"></i>
@@ -101,9 +101,9 @@
                                     </div>
                                 </div>
                                 <div class="col-md-2 text-center text-sm-right">
-                                    <span class="badge badge-secondary">#{addressForm.erpEmployee.position}</span>
+                                    <span class="badge badge-secondary">#{erpEmployeeIDForm.erpEmployee.position}</span>
                                     <p:outputPanel rendered="#{not erpEmployeeForm.joinedDate != null}">
-                                        <div class="text-muted"><small>#{addressForm.joinedDate}</small></div>
+                                        <div class="text-muted"><small>#{erpEmployeeIDForm.joinedDate}</small></div>
                                     </p:outputPanel>
                                 </div>
                             </div>
@@ -111,7 +111,7 @@
                         </p:outputPanel>
                         <div>
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="" class="active nav-link">Address Information</a></li>
+                                <li class="active"><a href="" class="active nav-link">ID Information</a></li>
                             </ul>
                             <p:spacer width="2"/>
                             <div class="tab-content">
@@ -119,39 +119,19 @@
                                     <div class="row">
                                         <div class="col-md-10">
                                             <div class="form-group">
-                                                <label for="addressName">Address</label>
-                                                <p:inputText autocomplete="off" value="#{addressForm.address.addressName}" class="form-control" id="addressName" placeholder="Address"/>
+                                                <label for="idNo">ID Number</label>
+                                                <p:inputText autocomplete="off" value="#{erpEmployeeIDForm.erpEmployeeID.identificationNumber}" class="form-control" id="idNo" placeholder="ID Number"/>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-10">
                                             <div class="form-group">
-                                                <label>Region</label>
-                                                <p:selectOneMenu id="region" value="#{addressForm.address.region}" style="width:150px">
+                                                <label>ID Type</label>
+                                                <p:selectOneMenu id="inputBlood" value="#{erpEmployeeIDForm.erpEmployeeID.idName.id}" style="width:150px">
                                                     <f:selectItem itemLabel="Select One" itemValue=""/>
-                                                    <f:selectItems value="#{addressForm.regions}" var="selectedRegion"/>
-                                                    <p:ajax update="city"/>
+                                                    <f:selectItems value="#{erpEmployeeIDForm.idTypes}"/>
                                                 </p:selectOneMenu>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label>City</label>
-                                                <p:selectOneMenu id="city" value="#{addressForm.address.city}" style="width:150px">
-                                                    <f:selectItem itemLabel="Select One" itemValue=""/>
-                                                    <f:selectItems value="#{addressForm.getCitiesByRegion(addressForm.address.region)}" var="selectedCity"/>
-                                                </p:selectOneMenu>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label for="postcode">Post Code</label>
-                                                <p:inputText autocomplete="off" value="#{addressForm.address.postalCode}" class="form-control" id="postcode" placeholder="Post Code"/>
                                             </div>
                                         </div>
                                     </div>

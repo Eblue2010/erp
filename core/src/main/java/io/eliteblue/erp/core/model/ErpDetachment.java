@@ -27,6 +27,9 @@ public class ErpDetachment extends CoreEntity {
     @OneToMany(mappedBy = "erpDetachment", cascade = CascadeType.MERGE, orphanRemoval = true)
     private Set<ErpPost> posts;
 
+    @OneToMany(mappedBy = "erpDetachment", cascade = CascadeType.MERGE, orphanRemoval = true)
+    private Set<ErpTimeSchedule> erpTimeSchedules;
+
     @ManyToOne
     @JoinColumn(name = "erp_client_id", nullable = false)
     private ErpClient erpClient;
@@ -64,6 +67,14 @@ public class ErpDetachment extends CoreEntity {
 
     public void setPosts(Set<ErpPost> posts) {
         this.posts = posts;
+    }
+
+    public Set<ErpTimeSchedule> getErpTimeSchedules() {
+        return erpTimeSchedules;
+    }
+
+    public void setErpTimeSchedules(Set<ErpTimeSchedule> erpTimeSchedules) {
+        this.erpTimeSchedules = erpTimeSchedules;
     }
 
     public ErpClient getErpClient() {

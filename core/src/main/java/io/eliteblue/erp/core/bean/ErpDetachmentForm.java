@@ -1,6 +1,5 @@
 package io.eliteblue.erp.core.bean;
 
-import io.eliteblue.erp.core.converters.OperationsAreaConverter;
 import io.eliteblue.erp.core.lazy.LazyEmployeeModel;
 import io.eliteblue.erp.core.lazy.LazyErpPostModel;
 import io.eliteblue.erp.core.model.*;
@@ -9,20 +8,20 @@ import io.eliteblue.erp.core.service.ErpDetachmentService;
 import io.eliteblue.erp.core.service.ErpEmployeeService;
 import io.eliteblue.erp.core.service.OperationsAreaService;
 import org.omnifaces.util.Faces;
-import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.util.LangUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.github.adminfaces.template.util.Assert.has;
@@ -30,6 +29,8 @@ import static com.github.adminfaces.template.util.Assert.has;
 @Named
 @ViewScoped
 public class ErpDetachmentForm implements Serializable {
+
+    final DateFormat format = new SimpleDateFormat("HH:mm");
 
     @Autowired
     private ErpDetachmentService erpDetachmentService;
@@ -55,6 +56,10 @@ public class ErpDetachmentForm implements Serializable {
     private List<ErpPost> posts;
     private ErpPost selectedPost;
 
+    private List<ErpTimeSchedule> filteredErpTimeSchedules;
+    private List<ErpTimeSchedule> erpTimeSchedules;
+    private ErpTimeSchedule selectedErpTimeSchedule;
+
     private List<ErpEmployee> employees;
     private List<ErpEmployee> filteredEmployees;
     private LazyDataModel<ErpEmployee> lazyErpEmployees;
@@ -74,6 +79,7 @@ public class ErpDetachmentForm implements Serializable {
                 lazyErpPosts = new LazyErpPostModel(posts);
                 employees = new ArrayList<>(erpDetachment.getAssignedEmployees());
                 lazyErpEmployees = new LazyEmployeeModel(employees);
+                erpTimeSchedules = new ArrayList<ErpTimeSchedule>(erpDetachment.getErpTimeSchedules());
             }
         } else {
             erpDetachment = new ErpDetachment();
@@ -170,6 +176,30 @@ public class ErpDetachmentForm implements Serializable {
         this.filteredErpPosts = filteredErpPosts;
     }
 
+    public List<ErpTimeSchedule> getFilteredErpTimeSchedules() {
+        return filteredErpTimeSchedules;
+    }
+
+    public void setFilteredErpTimeSchedules(List<ErpTimeSchedule> filteredErpTimeSchedules) {
+        this.filteredErpTimeSchedules = filteredErpTimeSchedules;
+    }
+
+    public List<ErpTimeSchedule> getErpTimeSchedules() {
+        return erpTimeSchedules;
+    }
+
+    public void setErpTimeSchedules(List<ErpTimeSchedule> erpTimeSchedules) {
+        this.erpTimeSchedules = erpTimeSchedules;
+    }
+
+    public ErpTimeSchedule getSelectedErpTimeSchedule() {
+        return selectedErpTimeSchedule;
+    }
+
+    public void setSelectedErpTimeSchedule(ErpTimeSchedule selectedErpTimeSchedule) {
+        this.selectedErpTimeSchedule = selectedErpTimeSchedule;
+    }
+
     public List<ErpEmployee> getEmployees() {
         return employees;
     }
@@ -202,8 +232,16 @@ public class ErpDetachmentForm implements Serializable {
         this.lazyErpEmployees = lazyErpEmployees;
     }
 
+    public DateFormat getFormat() {
+        return format;
+    }
+
     public String newPostPressed() {
         return "post-form?detachmentId="+id+"faces-redirect=true&includeViewParams=true";
+    }
+
+    public String newTimePressed() {
+        return "time-schedule-form?detachmentId="+id+"faces-redirect=true&includeViewParams=true";
     }
 
     public String newEmployeePressed() {
@@ -227,6 +265,14 @@ public class ErpDetachmentForm implements Serializable {
 
     public void onRowUnselect(UnselectEvent<ErpPost> event) throws Exception {
         FacesContext.getCurrentInstance().getExternalContext().redirect("post-form.xhtml?id="+selectedPost.getId());
+    }
+
+    public void onRowSelectTime(SelectEvent<ErpTimeSchedule> event) throws Exception {
+        FacesContext.getCurrentInstance().getExternalContext().redirect("time-schedule-form.xhtml?id="+ selectedErpTimeSchedule.getId());
+    }
+
+    public void onRowUnselectTime(UnselectEvent<ErpTimeSchedule> event) throws Exception {
+        FacesContext.getCurrentInstance().getExternalContext().redirect("time-schedule-form.xhtml?id="+ selectedErpTimeSchedule.getId());
     }
 
     public boolean globalFilterFunction(Object value, Object filter, Locale locale) {

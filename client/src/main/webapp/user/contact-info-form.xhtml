@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="title">
+        <p:outputPanel rendered="#{contactInfoForm.isNew()}">
+            <h1>New Contact Information</h1>
+        </p:outputPanel>
+        <p:outputPanel rendered="#{not contactInfoForm.isNew()}">
+            <h1>Edit Contact Information</h1>
+        </p:outputPanel>
+    </ui:define>
+
+    <ui:define name="metadata">
+        <style type="text/css">
+            .box-body .row{
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="description">
+        <p:outputPanel rendered="#{contactInfoForm.isNew()}">
+            Create a new Contact Info.
+        </p:outputPanel>
+        <p:outputPanel rendered="#{not contactInfoForm.isNew()}">
+            Update Contact information.
+        </p:outputPanel>
+    </ui:define>
+
+    <ui:define name="body">
+        <f:metadata>
+            <f:viewParam name="employeeId" value="#{contactInfoForm.employeeId}" converter="javax.faces.Long"/>
+            <f:viewParam name="id" value="#{contactInfoForm.id}" converter="javax.faces.Long"/>
+            <f:event type="preRenderView" listener="#{contactInfoForm.init}"/>
+        </f:metadata>
+
+        <h:form id="form" prependId="false">
+            <h:messages/>
+
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <div id="main-buttons" class="hidden-sm hidden-xs">
+                        <p:commandButton value="Save" action="#{contactInfoForm.save}" update="@form"
+                                         icon="fa fa-check" styleClass="btn-primary"/>
+                        <p:spacer width="5" rendered="#{contactInfoForm.isNew()}"/>
+                        <p:commandButton value="Clear" action="#{contactInfoForm.clear}" process="@this"
+                                         icon="fa fa-refresh" styleClass="btn-success"
+                                         update="@form" rendered="#{contactInfoForm.isNew()}" resetValues="true"/>
+                        <p:spacer width="5" rendered="#{not contactInfoForm.isNew()}"/>
+
+                        <p:commandButton value="Delete" action="#{contactInfoForm.remove}" process="@this"
+                                         rendered="#{not contactInfoForm.isNew()}" icon="fa fa-trash"
+                                         styleClass="btn-danger">
+                            <f:setPropertyActionListener value="true"
+                                                         target="#{facesContext.externalContext.flash.keepMessages}"/>
+                            <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger"/>
+                        </p:commandButton>
+                        <p:spacer width="5"/>
+                        <p:commandButton value="Back" action="#{contactInfoForm.backBtnPressed}" icon="fa fa-reply"/>
+                    </div>
+                    <p:splitButton value="Save" action="#{contactInfoForm.save}" update="@form"
+                                   icon="fa fa-check"
+                                   styleClass="hidden-md hidden-lg btn-primary">
+                        <p:menuitem value="Reset" action="#{contactInfoForm.clear}"
+                                    process="@this" update="@form" rendered="#{contactInfoForm.isNew()}"
+                                    resetValues="true" icon="fa fa-refresh"/>
+                        <p:menuitem value="Delete" action="#{contactInfoForm.remove}" process="@this"
+                                    rendered="#{not contactInfoForm.isNew()}" icon="fa fa-trash"
+                        >
+                            <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger"/>
+                        </p:menuitem>
+                        <p:separator/>
+                        <p:menuitem value="Back" action="#{contactInfoForm.backBtnPressed}" icon="fa fa-reply"/>
+                    </p:splitButton>
+                    <p:separator/>
+
+                    <div class="box-body">
+                        <p:outputPanel rendered="#{contactInfoForm.erpEmployee != null}">
+                            <div class="row">
+                                <div class="col-md-3" align="center">
+                                    <div class="mx-auto" style="width: 160px;">
+                                        <img class="profile-user-img img-responsive img-circle" src="#{request.contextPath}/resources/images/empty-profile.jpeg" alt="User profile picture"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="text-sm-left mb-2 mb-sm-0">
+                                        <h2>#{contactInfoForm.erpEmployee.firstname} #{contactInfoForm.erpEmployee.middlename.charAt(0)}. #{contactInfoForm.erpEmployee.lastname}</h2>
+                                        <p class="mb-0">ID: #{contactInfoForm.erpEmployee.employeeId}</p>
+                                        <div class="text-muted"><small>Updated #{contactInfoForm.lastUpdate}</small></div>
+                                        <div class="text-muted"><small>Last update by <b>#{contactInfoForm.erpEmployee.lastEditedBy}</b></small></div>
+                                        <!--<div class="mt-2">
+                                            <button class="btn btn-primary" type="button">
+                                                <i class="fa fa-fw fa-camera"></i>
+                                                <span>Change Photo</span>
+                                            </button>
+                                        </div>-->
+                                    </div>
+                                </div>
+                                <div class="col-md-2 text-center text-sm-right">
+                                    <span class="badge badge-secondary">#{contactInfoForm.erpEmployee.position}</span>
+                                    <p:outputPanel rendered="#{not erpEmployeeForm.joinedDate != null}">
+                                        <div class="text-muted"><small>#{contactInfoForm.joinedDate}</small></div>
+                                    </p:outputPanel>
+                                </div>
+                            </div>
+                            <p:spacer width="2"/>
+                        </p:outputPanel>
+                        <div>
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="" class="active nav-link">Contact Information</a></li>
+                            </ul>
+                            <p:spacer width="2"/>
+                            <div class="tab-content">
+                                <div class="tab-pane-active">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <div class="form-group">
+                                                <label for="contactNo">Contact Number</label>
+                                                <p:inputText autocomplete="off" value="#{contactInfoForm.contactInfo.contactNumber}" class="form-control" id="contactNo" placeholder="Contact Number"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-danger box-solid">
+                <p:commandButton value="Yes" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes"
+                                 icon="fa fa-check"/>
+                <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no"
+                                 icon="fa fa-close"/>
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

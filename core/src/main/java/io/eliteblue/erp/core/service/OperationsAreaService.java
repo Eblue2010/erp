@@ -3,6 +3,7 @@ package io.eliteblue.erp.core.service;
 import io.eliteblue.erp.core.constants.DataOperation;
 import io.eliteblue.erp.core.model.OperationsArea;
 import io.eliteblue.erp.core.repository.OperationsAreaRepository;
+import io.eliteblue.erp.core.util.CurrentUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,9 @@ public class OperationsAreaService extends CoreErpServiceImpl implements CoreErp
 
     @Autowired
     private OperationsAreaRepository repository;
+
+    @Autowired
+    private CurrentUserUtil currentUserUtil;
 
     public List<OperationsArea> getAll() {
         return repository.findAll();
@@ -32,7 +36,10 @@ public class OperationsAreaService extends CoreErpServiceImpl implements CoreErp
     }
 
     public void save(OperationsArea operationsArea) {
+        String currentUserName = CurrentUserUtil.getFullName();
         if(operationsArea.getId() == null) {
+            operationsArea.setCreatedBy(currentUserName);
+            operationsArea.setLastEditedBy(currentUserName);
             operationsArea.setDateCreated(new Date());
             operationsArea.setOperation(DataOperation.CREATED.toString());
             operationsArea.setCreatedBy(super.getCurrentUser());
@@ -40,7 +47,7 @@ public class OperationsAreaService extends CoreErpServiceImpl implements CoreErp
         else {
             operationsArea.setOperation(DataOperation.UPDATED.toString());
             operationsArea.setLastUpdate(new Date());
-            operationsArea.setLastEditedBy(super.getCurrentUser());
+            operationsArea.setLastEditedBy(currentUserName);
         }
         operationsArea.setLastUpdate(new Date());
         repository.save(operationsArea);
