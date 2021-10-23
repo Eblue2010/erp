@@ -6,7 +6,7 @@
 
     <artifactId>client</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <name>client</name>
 
     <parent>
