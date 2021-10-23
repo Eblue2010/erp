@@ -37,11 +37,11 @@
 
                     <p:separator/>
 
-                    <p:dataTable id="operationsAreaTab" var="area" value="#{operationsAreaListMB.areas}" selectionMode="single"
+                    <p:dataTable id="operationsAreaTab" var="area" value="#{operationsAreaListMB.lazyOperationsAreas}" selectionMode="single"
                         paginator="true" rows="10" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                        emptyMessage="No Users found with given criteria" globalFilterFunction="#{operationsAreaListMB.globalFilterFunction}"
-                        filteredValue="#{operationsAreaListMB.filteredOperationsAreas}" widgetVar="operationsAreaTable"
+                        emptyMessage="No Users found with given criteria"
+                        widgetVar="operationsAreaTable"
                         selection="#{operationsAreaListMB.selectedArea}" rowKey="#{area.id}">
 
                         <p:ajax event="rowSelect" listener="#{operationsAreaListMB.onRowSelect}"/>

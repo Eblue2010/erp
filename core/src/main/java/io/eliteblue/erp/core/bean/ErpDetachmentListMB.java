@@ -86,7 +86,8 @@ public class ErpDetachmentListMB implements Serializable {
         int filterInt = getInteger(filterText);
 
         ErpDetachment erpDetachment = (ErpDetachment) value;
-        return erpDetachment.getName().toLowerCase().contains(filterText);
+        return erpDetachment.getName().toLowerCase().contains(filterText)
+            || erpDetachment.getLocation().getLocation().toLowerCase().contains(filterText);
     }
 
     private int getInteger(String string) {

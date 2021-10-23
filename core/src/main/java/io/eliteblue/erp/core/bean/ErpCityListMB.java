@@ -48,6 +48,7 @@ public class ErpCityListMB implements Serializable {
             erpRegion = regionCityService.findRegionById(Long.valueOf(id));
             cities = regionCityService.getAllCitiesFromRegion(erpRegion);
             lazyErpCities = new LazyCityModel(cities);
+            lazyErpCities.setRowCount(10);
         } else {
             erpRegion = new ErpRegion();
         }

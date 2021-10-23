@@ -2,6 +2,7 @@ package io.eliteblue.erp.core.service;
 
 import io.eliteblue.erp.core.constants.DataOperation;
 import io.eliteblue.erp.core.model.ErpWorkSchedule;
+import io.eliteblue.erp.core.model.OperationsArea;
 import io.eliteblue.erp.core.repository.WorkScheduleRepository;
 import io.eliteblue.erp.core.util.CurrentUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,11 @@ public class WorkScheduleService extends CoreErpServiceImpl implements CoreErpSe
     @Override
     public List<ErpWorkSchedule> getAll() {
         return repository.findAll();
+    }
+
+    public List<ErpWorkSchedule> getAllFilteredLocation() {
+        List<OperationsArea> assignedLocations = CurrentUserUtil.getOperationsAreas();
+        return repository.getAllFiltered(assignedLocations, new Date());
     }
 
     @Override

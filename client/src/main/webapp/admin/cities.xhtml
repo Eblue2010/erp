@@ -47,12 +47,12 @@
                         <p:spacer width="5"/>
                     </div>
 
-                    <p:dataTable id="erpCitiesTab" var="city" value="#{erpCityListMB.cities}" selectionMode="single"
+                    <p:dataTable id="erpCitiesTab" var="city" value="#{erpCityListMB.lazyErpCities}" selectionMode="single"
                         paginator="true" rows="10" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                        emptyMessage="No Users found with given criteria" globalFilterFunction="#{erpCityListMB.globalFilterFunction}"
+                        emptyMessage="No Users found with given criteria"
                         filteredValue="#{erpCityListMB.filteredErpCities}" widgetVar="erpCitiesTable"
-                        selection="#{erpCityListMB.selectedCity}" rowKey="#{city.id}">
+                        rowKey="#{city.id}">
 
                         <p:ajax event="rowSelect" listener="#{erpCityListMB.onRowSelect}"/>
                         <p:ajax event="rowUnselect" listener="#{erpCityListMB.onRowUnselect}"/>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="title">
+        <h1>Work Schedule Template</h1>
+    </ui:define>
+
+    <ui:define name="description">
+        Upload or Download a work schedule template from the list.
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form id="form" prependId="false" enctype="multipart/form-data">
+            <h:messages/>
+
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <div id="main-buttons" class="hidden-sm hidden-xs">
+                        <p:commandButton value="Upload" ajax="false" action="#{workScheduleTemplateForm.fileUpload}" icon="fa fa-upload" styleClass="btn-primary"/>
+                        <p:spacer width="5"/>
+                        <p:commandButton value="Back" action="#{workScheduleTemplateForm.backBtnPressed}" icon="fa fa-reply"/>
+                    </div>
+                    <p:separator/>
+
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <p:fileUpload value="#{workScheduleTemplateForm.file}" mode="simple" skinSimple="true"/>
+                            </div>
+                        </div>
+                        <p:spacer width="5"/>
+                        <ui:repeat var="detach" value="#{workScheduleTemplateForm.detachments}">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <p:commandButton ajax="false" action="#{workScheduleTemplateForm.downloadFile(detach.id)}" icon="fa fa-download"
+                                                     value="Download" styleClass="btn-success"/>
+                                    <p:spacer width="6"/>
+                                    <label style="font-weight:bold;">#{detach.name}</label>
+                                </div>
+                            </div>
+                            <p:spacer width="5"/>
+                        </ui:repeat>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

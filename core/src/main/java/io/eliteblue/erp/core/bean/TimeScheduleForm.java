@@ -1,5 +1,6 @@
 package io.eliteblue.erp.core.bean;
 
+import io.eliteblue.erp.core.constants.WorkSchedLegend;
 import io.eliteblue.erp.core.model.ErpDetachment;
 import io.eliteblue.erp.core.model.ErpTimeSchedule;
 import io.eliteblue.erp.core.service.ErpDetachmentService;
@@ -16,6 +17,8 @@ import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.github.adminfaces.template.util.Assert.has;
 
@@ -38,6 +41,8 @@ public class TimeScheduleForm implements Serializable {
     private Date startTime;
     private Date endTime;
 
+    private Map<String, WorkSchedLegend> workSchedValues;
+
     public void init() throws Exception {
         if(Faces.isAjaxRequest()) {
             return;
@@ -50,7 +55,6 @@ public class TimeScheduleForm implements Serializable {
             endTime = new Date();
             startTime.setTime(erpTimeSchedule.getStartTime().getTime());
             endTime.setTime(erpTimeSchedule.getEndTime().getTime());
-
         } else {
             erpTimeSchedule = new ErpTimeSchedule();
             startTime = new Date();
@@ -61,6 +65,11 @@ public class TimeScheduleForm implements Serializable {
                 detachment = erpDetachmentService.findById(detachmentId);
                 erpTimeSchedule.setErpDetachment(detachment);
             }
+        }
+        workSchedValues = new HashMap<>();
+        for(WorkSchedLegend l: WorkSchedLegend.values()) {
+            if(!l.equals(WorkSchedLegend.DO))
+                workSchedValues.put(l.name(), l);
         }
     }
 
@@ -110,6 +119,14 @@ public class TimeScheduleForm implements Serializable {
 
     public void setDetachment(ErpDetachment detachment) {
         this.detachment = detachment;
+    }
+
+    public Map<String, WorkSchedLegend> getWorkSchedValues() {
+        return workSchedValues;
+    }
+
+    public void setWorkSchedValues(Map<String, WorkSchedLegend> workSchedValues) {
+        this.workSchedValues = workSchedValues;
     }
 
     public String backBtnPressed() { return "detachment-form?id="+detachmentId+"faces-redirect=true&includeViewParams=true"; }

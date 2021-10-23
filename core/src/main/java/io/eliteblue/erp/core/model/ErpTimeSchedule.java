@@ -1,5 +1,7 @@
 package io.eliteblue.erp.core.model;
 
+import io.eliteblue.erp.core.constants.WorkSchedLegend;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Time;
@@ -24,6 +26,10 @@ public class ErpTimeSchedule extends CoreEntity {
     @Column(name = "END_TIME")
     @NotNull
     private Time endTime;
+
+    @Column(name = "SCHEDULE_LEGEND", length = 20)
+    @Enumerated(EnumType.STRING)
+    private WorkSchedLegend legend;
 
     @ManyToOne
     @JoinColumn(name = "erp_detachment_id", nullable = false)
@@ -67,5 +73,13 @@ public class ErpTimeSchedule extends CoreEntity {
 
     public void setErpDetachment(ErpDetachment erpDetachment) {
         this.erpDetachment = erpDetachment;
+    }
+
+    public WorkSchedLegend getLegend() {
+        return legend;
+    }
+
+    public void setLegend(WorkSchedLegend legend) {
+        this.legend = legend;
     }
 }

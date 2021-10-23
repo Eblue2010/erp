@@ -3,6 +3,7 @@
                 xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:adm="http://github.com/adminfaces"
+                xmlns:sec="http://www.springframework.org/security/tags"
                 template="#{layoutMB.template}">
 
     <ui:define name="metadata">
@@ -29,11 +30,16 @@
         <h:form id="form">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <div id="main-buttons" class="hidden-sm hidden-xs">
-                        <p:commandButton action="workschedule-form?faces-redirect=true" icon="fa fa-plus"
-                                         value="New Work Schedule" styleClass="btn-primary"/>
-                        <p:spacer width="5"/>
-                    </div>
+                    <sec:authorize access="hasAnyRole('DETACHMENT_COM')">
+                        <div id="main-buttons" class="hidden-sm hidden-xs">
+                            <p:commandButton action="workschedule-form?faces-redirect=true" icon="fa fa-plus"
+                                             value="New Work Schedule" styleClass="btn-primary"/>
+                            <p:spacer width="5"/>
+                            <p:commandButton action="#{workScheduleListMB.downloadTemplate}" icon="fa fa-download"
+                                             value="Download/Upload" styleClass="btn-success"/>
+                            <p:spacer width="5"/>
+                        </div>
+                    </sec:authorize>
 
                     <p:dataTable id="workScheduleTab" var="workschedule" value="#{workScheduleListMB.workSchedules}" selectionMode="single"
                         paginator="true" rows="10" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
@@ -59,13 +65,16 @@
                         </p:column>
                         <p:column headerText="Start Date">
                             <h:outputText value="#{workschedule.startDate}">
-                                <!--<f:convertDateTime type="date" pattern="MM/dd/yyyy" />-->
+                                <!--<f:convertDateTime type="date" pattern="MM/dd/yyyy" timeZone="GMT-8"/>-->
                             </h:outputText>
                         </p:column>
                         <p:column headerText="End Date">
                             <h:outputText value="#{workschedule.stopDate}">
                                 <!--<f:convertDateTime type="date" pattern="MM/dd/yyyy" />-->
                             </h:outputText>
+                        </p:column>
+                        <p:column headerText="Status">
+                            <h:outputText value="#{workschedule.status}" />
                         </p:column>
                     </p:dataTable>
                 </div>

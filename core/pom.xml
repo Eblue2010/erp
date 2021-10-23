@@ -24,7 +24,7 @@
             </plugin>
         </plugins>
     </build>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>core</name>
 
 </project>

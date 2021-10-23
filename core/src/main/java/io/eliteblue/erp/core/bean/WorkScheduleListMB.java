@@ -30,7 +30,7 @@ public class WorkScheduleListMB implements Serializable {
 
     @PostConstruct
     public void init() {
-        workSchedules = workScheduleService.getAll();
+        workSchedules = workScheduleService.getAllFilteredLocation();
     }
 
     public List<ErpWorkSchedule> getFilteredErpWorkSchedules() {
@@ -57,8 +57,11 @@ public class WorkScheduleListMB implements Serializable {
         this.selectedWorkSchedule = selectedWorkSchedule;
     }
 
+    public String downloadTemplate() {
+        return "ws-download-templates?faces-redirect=true&includeViewParams=true";
+    }
+
     public void onRowSelect(SelectEvent<ErpWorkSchedule> event) throws Exception {
-        //System.out.println("SELECTED: "+selectedWorkSchedule);
         FacesContext.getCurrentInstance().getExternalContext().redirect("workschedule-form.xhtml?id="+selectedWorkSchedule.getId());
     }
 

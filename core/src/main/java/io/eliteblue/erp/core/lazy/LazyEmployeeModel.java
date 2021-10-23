@@ -64,22 +64,23 @@ public class LazyEmployeeModel extends LazyDataModel<ErpEmployee> {
     }
 
     private boolean filter(FacesContext context, Collection<FilterMeta> filterBy, Object o) {
-        boolean matching = true;
+        boolean matching = filterBy.size() <= 0;
+        //System.out.println("FILTERING........ "+filterBy.size());
 
         for (FilterMeta filter : filterBy) {
             FilterConstraint constraint = filter.getConstraint();
             Object filterValue = filter.getFilterValue();
+            //System.out.println("FILTERED VALUE: "+filterValue);
+            //System.out.println("FILTERED FIELD: "+filter.getField());
+            String filterText = (filterValue == null) ? null : filterValue.toString().trim().toLowerCase();
 
-            try {
-                Object columnValue = String.valueOf(o.getClass().getField(filter.getField()).get(o));
-                matching = constraint.isMatching(context, columnValue, filterValue, LocaleUtils.getCurrentLocale());
-            } catch (ReflectiveOperationException e) {
-                matching = false;
-            }
-
-            if (!matching) {
-                break;
-            }
+            ErpEmployee erpEmployee = (ErpEmployee) o;
+            return erpEmployee.getFirstname().toLowerCase().contains(filterText)
+                    || erpEmployee.getLastname().toLowerCase().contains(filterText)
+                    || erpEmployee.getGender().name().toLowerCase().contains(filterText)
+                    || erpEmployee.getEmployeeId().toLowerCase().contains(filterText)
+                    || erpEmployee.getStatus().name().toLowerCase().contains(filterText)
+                    || (erpEmployee.getFirstname().toLowerCase()+" "+erpEmployee.getLastname().toLowerCase()).contains(filterText);
         }
 
         return matching;

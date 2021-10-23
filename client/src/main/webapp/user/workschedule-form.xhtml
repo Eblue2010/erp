@@ -2,24 +2,35 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui" xmlns:adm="http://github.com/adminfaces"
+                xmlns:sec="http://www.springframework.org/security/tags"
                 template="#{layoutMB.template}">
 
     <ui:define name="title">
-        <p:outputPanel rendered="#{workScheduleForm.isNew()}">
-            <h1>New Work Schedule</h1>
-        </p:outputPanel>
-        <p:outputPanel rendered="#{not workScheduleForm.isNew()}">
-            <h1>Edit Work Schedule</h1>
-        </p:outputPanel>
+        <sec:authorize access="hasRole('DETACHMENT_COM')">
+            <p:outputPanel rendered="#{workScheduleForm.isNew()}">
+                <h1>New Work Schedule</h1>
+            </p:outputPanel>
+            <p:outputPanel rendered="#{not workScheduleForm.isNew()}">
+                <h1>Edit Work Schedule</h1>
+            </p:outputPanel>
+        </sec:authorize>
+        <sec:authorize access="!hasRole('DETACHMENT_COM')">
+            <h1>Work Schedule Management</h1>
+        </sec:authorize>
     </ui:define>
 
     <ui:define name="description">
-        <p:outputPanel rendered="#{workScheduleForm.isNew()}">
-            Create a new Work Schedule.
-        </p:outputPanel>
-        <p:outputPanel rendered="#{not workScheduleForm.isNew()}">
-            Update Work Schedule.
-        </p:outputPanel>
+        <sec:authorize access="hasRole('DETACHMENT_COM')">
+            <p:outputPanel rendered="#{workScheduleForm.isNew()}">
+                Create a new Work Schedule.
+            </p:outputPanel>
+            <p:outputPanel rendered="#{not workScheduleForm.isNew()}">
+                Update Work Schedule.
+            </p:outputPanel>
+        </sec:authorize>
+        <sec:authorize access="!hasRole('DETACHMENT_COM')">
+            Approve or Reject Work Schedule.
+        </sec:authorize>
     </ui:define>
 
     <ui:define name="body">
@@ -35,6 +46,7 @@
 
             <div class="box box-primary">
                 <div class="box-header with-border">
+                    <sec:authorize access="hasRole('DETACHMENT_COM')">
                     <div id="main-buttons" class="hidden-sm hidden-xs">
                         <p:commandButton value="Save" action="#{workScheduleForm.save}" update="@form"
                                          icon="fa fa-check" styleClass="btn-primary"/>
@@ -68,9 +80,55 @@
                         <p:separator/>
                         <p:menuitem value="Back" action="#{workScheduleForm.backBtnPressed}" icon="fa fa-reply"/>
                     </p:splitButton>
+                    </sec:authorize>
+                    <sec:authorize access="!hasRole('DETACHMENT_COM')">
+                    <div id="ws-buttons" class="hidden-sm hidden-xs">
+                        <p:commandButton value="Approve" action="#{workScheduleForm.approve}" update="@form"
+                                         icon="fa fa-check" styleClass="btn-primary"/>
+                        <p:spacer width="5" rendered="#{workScheduleForm.isNew()}"/>
+                        <p:commandButton value="Reject" action="#{workScheduleForm.reject}" process="@this"
+                                         rendered="#{not workScheduleForm.isNew()}" icon="fa fa-trash"
+                                         styleClass="btn-danger">
+                            <f:setPropertyActionListener value="true"
+                                                         target="#{facesContext.externalContext.flash.keepMessages}"/>
+                            <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger"/>
+                        </p:commandButton>
+                        <p:spacer width="5"/>
+                        <p:commandButton value="Back" action="#{workScheduleForm.backBtnPressed}" icon="fa fa-reply"/>
+                    </div>
+                    <p:splitButton value="Approve" action="#{workScheduleForm.approve}" update="@form"
+                                   icon="fa fa-check"
+                                   styleClass="hidden-md hidden-lg btn-primary">
+                        <p:menuitem value="Reject" action="#{workScheduleForm.reject}" process="@this"
+                                    rendered="#{not erpPostForm.isNew()}" icon="fa fa-trash"
+                        >
+                            <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger"/>
+                        </p:menuitem>
+                        <p:separator/>
+                        <p:menuitem value="Back" action="#{workScheduleForm.backBtnPressed}" icon="fa fa-reply"/>
+                    </p:splitButton>
+                    </sec:authorize>
                     <p:separator/>
 
+                    <sec:authorize access="hasRole('DETACHMENT_COM')">
                     <div class="box-body">
+                        <p:outputPanel rendered="#{not workScheduleForm.isNew()}">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" style="font-weight:bold;">STATUS</label>
+                                <div class="col-sm-10">
+                                    <p:outputPanel rendered="#{workScheduleForm.erpWorkSchedule.status ne null and workScheduleForm.erpWorkSchedule.status == 'PENDING'}">
+                                        <span class="label label-warning" style="font-size:14px;">PENDING</span>
+                                    </p:outputPanel>
+                                    <p:outputPanel rendered="#{workScheduleForm.erpWorkSchedule.status ne null and workScheduleForm.erpWorkSchedule.status == 'REJECTED'}">
+                                        <span class="label label-danger" style="font-size:14px;">REJECTED</span>
+                                    </p:outputPanel>
+                                    <p:outputPanel rendered="#{workScheduleForm.erpWorkSchedule.status ne null and workScheduleForm.erpWorkSchedule.status == 'APPROVED'}">
+                                        <span class="label label-success" style="font-size:14px;">APPROVED</span>
+                                    </p:outputPanel>
+                                </div>
+                            </div>
+                            <p:spacer width="5"/>
+                        </p:outputPanel>
                         <div class="form-group">
                             <label for="description" class="col-sm-2 control-label">Schedule Description</label>
                             <div class="col-sm-10">
@@ -153,14 +211,89 @@
                                 </div>
                             </f:facet>
 
-                            <p:column headerText="Employee First Name">
+                            <p:column headerText="First Name">
                                 <h:outputText value="#{assignment.employeeAssigned.firstname}" />
                             </p:column>
-                            <p:column headerText="Employee Last Name">
+                            <p:column headerText="Last Name">
                                 <h:outputText value="#{assignment.employeeAssigned.lastname}" />
+                            </p:column>
+                            <p:column headerText="Work Assignment">
+                                <h:outputText value="#{assignment.workAssignment}" />
                             </p:column>
                         </p:dataTable>
                     </p:outputPanel>
+                    </sec:authorize>
+
+                    <sec:authorize access="!hasRole('DETACHMENT_COM')">
+                    <div class="box-body">
+                        <div class="row">
+                            <label class="col-sm-1 control-label" style="font-weight:bold;">STATUS</label>
+                            <div class="col-sm-10">
+                                <p:outputPanel rendered="#{workScheduleForm.erpWorkSchedule.status ne null and workScheduleForm.erpWorkSchedule.status == 'PENDING'}">
+                                    <span class="label label-warning" style="font-size:14px;">PENDING</span>
+                                </p:outputPanel>
+                                <p:outputPanel rendered="#{workScheduleForm.erpWorkSchedule.status ne null and workScheduleForm.erpWorkSchedule.status == 'REJECTED'}">
+                                    <span class="label label-danger" style="font-size:14px;">REJECTED</span>
+                                </p:outputPanel>
+                                <p:outputPanel rendered="#{workScheduleForm.erpWorkSchedule.status ne null and workScheduleForm.erpWorkSchedule.status == 'APPROVED'}">
+                                    <span class="label label-success" style="font-size:14px;">APPROVED</span>
+                                </p:outputPanel>
+                            </div>
+                        </div>
+                        <p:spacer width="5"/>
+                        <div class="row">
+                            <div class="col-md-10">
+                                <label class="control-label" style="font-weight:bold;">SUBMITTED BY: </label>
+                                <p:spacer width="5"/>
+                                <label class="control-label" style="font-weight:bold;">#{workScheduleForm.erpWorkSchedule.createdBy}</label>
+                            </div>
+                        </div>
+                        <p:spacer width="5"/>
+                        <p:spacer width="5"/>
+                        <div class="row">
+                            <div class="col-md-3">
+                                WEEK PERIOD: <h:outputText value="#{workScheduleForm.erpWorkSchedule.startDate}"><f:convertDateTime pattern="MMMMM " /></h:outputText>#{workScheduleForm.startDate.getDayOfMonth()}-#{workScheduleForm.stopDate.getDayOfMonth()}<h:outputText value="#{workScheduleForm.erpWorkSchedule.stopDate}"><f:convertDateTime pattern=" yyyy" /></h:outputText>
+                            </div>
+                            <div class="col-md-4">
+                                DETACHMENT: #{workScheduleForm.detachment.name}
+                            </div>
+                            <div class="col-md-4">
+                                AREA OF RESPONSIBILITY: #{workScheduleForm.detachment.location.location}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                MONTH OF: <h:outputText value="#{workScheduleForm.erpWorkSchedule.startDate}"><f:convertDateTime pattern="MMMMM, yyyy" /></h:outputText>
+                            </div>
+                        </div>
+
+                        <p:spacer width="5"/>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">NAME</th>
+                                <th scope="col">WORK ASSIGNMENT</th>
+                                <ui:repeat var="workingDay" value="#{workScheduleForm.workingDays}">
+                                    <th scope="col">#{workingDay}</th>
+                                </ui:repeat>
+                                <th scope="col">Total</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <ui:repeat var="workAssn" value="#{workScheduleForm.workAssignments}">
+                                <tr>
+                                    <td>#{workAssn.employeeAssigned.lastname}, #{workAssn.employeeAssigned.firstname}</td>
+                                    <td>#{workAssn.workAssignment}</td>
+                                    <ui:repeat var="wd" value="#{workAssn.workDays}">
+                                        <td>#{wd.shiftSchedule}</td>
+                                    </ui:repeat>
+                                    <td>#{workAssn.workDays.size()}</td>
+                                </tr>
+                            </ui:repeat>
+                            </tbody>
+                        </table>
+                    </div>
+                    </sec:authorize>
                 </div>
             </div>
 

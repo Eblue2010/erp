@@ -1,5 +1,7 @@
 package io.eliteblue.erp.core.model;
 
+import io.eliteblue.erp.core.constants.ApprovalStatus;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -37,6 +39,10 @@ public class ErpWorkSchedule extends CoreEntity {
     @Column(name = "AREA_SEC_COMMANDER", length = 50)
     @NotNull
     private String areaSecurityCommander;
+
+    @Column(name = "APPROVAL_STATUS", length = 20)
+    @Enumerated(EnumType.STRING)
+    private ApprovalStatus status;
 
     @OneToMany(mappedBy = "workSchedule", cascade = CascadeType.MERGE, orphanRemoval = true)
     private Set<ErpWorkAssignment> workAssignments;
@@ -115,5 +121,13 @@ public class ErpWorkSchedule extends CoreEntity {
 
     public void setErpDetachment(ErpDetachment erpDetachment) {
         this.erpDetachment = erpDetachment;
+    }
+
+    public ApprovalStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ApprovalStatus status) {
+        this.status = status;
     }
 }

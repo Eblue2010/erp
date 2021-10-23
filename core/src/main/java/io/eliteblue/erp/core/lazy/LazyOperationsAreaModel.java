@@ -69,17 +69,10 @@ public class LazyOperationsAreaModel extends LazyDataModel<OperationsArea> {
         for (FilterMeta filter : filterBy) {
             FilterConstraint constraint = filter.getConstraint();
             Object filterValue = filter.getFilterValue();
+            String filterText = (filterValue == null) ? null : filterValue.toString().trim().toLowerCase();
 
-            try {
-                Object columnValue = String.valueOf(o.getClass().getField(filter.getField()).get(o));
-                matching = constraint.isMatching(context, columnValue, filterValue, LocaleUtils.getCurrentLocale());
-            } catch (ReflectiveOperationException e) {
-                matching = false;
-            }
-
-            if (!matching) {
-                break;
-            }
+            OperationsArea operationsArea = (OperationsArea) o;
+            return operationsArea.getLocation().toLowerCase().contains(filterText);
         }
 
         return matching;

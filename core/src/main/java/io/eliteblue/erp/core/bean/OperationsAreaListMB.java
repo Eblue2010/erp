@@ -36,6 +36,7 @@ public class OperationsAreaListMB implements Serializable {
     public void init() {
         areas = operationsAreaService.getAll();
         lazyOperationsAreas = new LazyOperationsAreaModel(areas);
+        lazyOperationsAreas.setRowCount(10);
     }
 
     public LazyDataModel<OperationsArea> getLazyOperationsAreas() {

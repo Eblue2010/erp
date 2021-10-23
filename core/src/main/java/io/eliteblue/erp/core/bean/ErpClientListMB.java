@@ -36,6 +36,7 @@ public class ErpClientListMB implements Serializable {
     public void init() {
         clients = erpClientService.getAll();
         lazyErpClients = new LazyErpClientModel(clients);
+        lazyErpClients.setRowCount(10);
     }
 
     public LazyDataModel<ErpClient> getLazyErpClients() {

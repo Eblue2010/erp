@@ -37,6 +37,7 @@ public class ErpEmployeeListMB implements Serializable {
         //employees = employeeService.getAll();
         employees = employeeService.getAllFiltered();
         lazyErpEmployees = new LazyEmployeeModel(employees);
+        lazyErpEmployees.setRowCount(10);
     }
 
     public LazyDataModel<ErpEmployee> getLazyErpEmployees() {

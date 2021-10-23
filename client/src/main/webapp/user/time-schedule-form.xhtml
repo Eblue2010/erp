@@ -77,6 +77,13 @@
                         </div>
                         <p:spacer width="5"/>
                         <div class="form-group">
+                            <label for="description" class="col-sm-2 control-label">Time Schedule Description</label>
+                            <div class="col-sm-10">
+                                <p:inputText autocomplete="off" value="#{timeScheduleForm.erpTimeSchedule.description}" class="form-control" id="description" placeholder="Name"/>
+                            </div>
+                        </div>
+                        <p:spacer width="5"/>
+                        <div class="form-group">
                             <label for="timeStart" class="col-sm-2 control-label">Time Schedule Start</label>
                             <div class="col-sm-10">
                                 <p:datePicker autocomplete="off" id="timeStart" value="#{timeScheduleForm.startTime}" timeOnly="true" pattern="HH:mm"/>
@@ -91,9 +98,11 @@
                         </div>
                         <p:spacer width="5"/>
                         <div class="form-group">
-                            <label for="description" class="col-sm-2 control-label">Time Schedule Description</label>
+                            <label for="inputSched" class="col-sm-2 control-label">Legend</label>
                             <div class="col-sm-10">
-                                <p:inputText autocomplete="off" value="#{timeScheduleForm.erpTimeSchedule.description}" class="form-control" id="description" placeholder="Name"/>
+                                <p:selectOneMenu id="inputSched" value="#{timeScheduleForm.erpTimeSchedule.legend}" style="width:150px">
+                                    <f:selectItems value="#{timeScheduleForm.workSchedValues}"/>
+                                </p:selectOneMenu>
                             </div>
                         </div>
                     </div>

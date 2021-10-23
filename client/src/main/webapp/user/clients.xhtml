@@ -37,11 +37,11 @@
 
                     <p:separator/>
 
-                    <p:dataTable id="erpClientTab" var="client" value="#{erpClientListMB.clients}" selectionMode="single"
+                    <p:dataTable id="erpClientTab" var="client" value="#{erpClientListMB.lazyErpClients}" selectionMode="single"
                         paginator="true" rows="10" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                        emptyMessage="No Clients found with given criteria" globalFilterFunction="#{erpClientListMB.globalFilterFunction}"
-                        filteredValue="#{erpClientListMB.filteredErpClients}" widgetVar="erpClientTable"
+                        emptyMessage="No Clients found with given criteria"
+                        widgetVar="erpClientTable"
                         selection="#{erpClientListMB.selectedClient}" rowKey="#{client.id}">
 
                         <p:ajax event="rowSelect" listener="#{erpClientListMB.onRowSelect}"/>
